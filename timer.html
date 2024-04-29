@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Timer</title>
+</head>
+<body>
+
+<h1>Timer</h1>
+<div id="timer">00:00:00</div>
+
+<script>
+// Define variables to hold time values
+let seconds = 0;
+let minutes = 0;
+let hours = 0;
+
+// Define vars to hold "display" value
+let displaySeconds = 0;
+let displayMinutes = 0;
+let displayHours = 0;
+
+// Variable to hold setInterval() function
+let interval = null;
+
+// Function to increment next value
+function timer() {
+    seconds++;
+    
+    // Logic to determine when to increment next value
+    if(seconds / 60 === 1){
+        seconds = 0;
+        minutes++;
+
+        if(minutes / 60 === 1){
+            minutes = 0;
+            hours++;
+        }
+    }
+    
+    // If seconds/minutes/hours are only one digit, add a leading 0
+    displaySeconds = seconds < 10 ? "0" + seconds.toString() : seconds;
+    displayMinutes = minutes < 10 ? "0" + minutes.toString() : minutes;
+    displayHours = hours < 10 ? "0" + hours.toString() : hours;
+    
+    // Display updated time values to user
+    document.getElementById("timer").innerText = displayHours + ":" + displayMinutes + ":" + displaySeconds;
+}
+
+window.onload = function() {
+    // Start the timer as soon as the window loads
+    interval = setInterval(timer, 1000);
+}
+</script>
+
+</body>
+</html>
