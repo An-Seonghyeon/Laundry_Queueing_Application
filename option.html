@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile App Interface</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+  }
+  .status-bar {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 10px;
+    text-align: center;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+  }
+  .menu-item {
+    background-color: #e6e6e6;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .nav-bar {
+    display: flex;
+    justify-content: space-around;
+    background-color: #f0f0f0;
+    padding: 10px 0;
+  }
+  .nav-bar img {
+    width: 24px;
+    height: 24px;
+  }
+</style>
+</head>
+<body>
+
+<div class="status-bar">9:41</div>
+
+<div class="header">
+  <button>&larr;</button>
+  <div>카이퍼 <span>&#x25BC;</span></div>
+  <div>7종 <span>&#x25BC;</span></div>
+</div>
+
+<div class="menu-item">표준 - Standard</div>
+<div class="menu-item">강력 - Powerful</div>
+<div class="menu-item">기타 - Others</div>
+
+<div class="nav-bar">
+  <img src="home-icon.png" alt="Home">
+  <img src="users-icon.png" alt="Users">
+  <img src="settings-icon.png" alt="Settings">
+</div>
+
+</body>
+</html>
