@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+<title>status</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+  }
+  .under_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+  }
+  .under_under_header {
+    align-items: center;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+  }
+  .color-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #E2F5ED;
+    border-radius: 8px;
+    border: 1px solid #08B783;
+    margin: 10px;
+    color: #5e5d5d;
+    font-size: 0.8em;
+  }
+  .box-item-left {
+    position: relative;
+    left: 20px;
+  }
+  .box-item-right {
+    position: relative;
+    right: 20px;
+  }
+  .font-uner-header {
+    position: relative;
+    left: 10px;
+  }
+
+
+  .time-item {
+    background-color: #fff;
+    padding: 20px;
+    margin: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+  }
+  .nav-bar {
+    display: flex;
+    justify-content: space-around;
+    background-color: #f0f0f0;
+    padding: 10px 0;
+  }
+  .nav-bar img {
+    width: 24px;
+    height: 24px;
+  }
+  .box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+  .wait {
+    color: #5e5d5d;
+    font-size: 0.5em;
+  }
+  .time {
+    position: relative;
+    right: 20px;
+  }
+
+
+  .dropdown-content {
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 100;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+</style>
+</head>
+<body>
+
+
+<div class="header">
+  <span class="material-symbols-outlined">
+    arrow_back_ios
+  </span>
+  <div><strong>카이퍼</strong></div>
+  <div><span>&#x25BC;</span></div>
+</div>
+<div class="under_header">
+  <div></div>
+  <div class="font-uner-header"><strong>7층</strong></div>
+  <div><span>&#x25BC;</span></div>
+</div>
+<div class="under_under_header">
+  <div class="color-box">
+    <div class="box-item-left">세탁기 정보</div>
+    <div>남은 시간</div>
+    <div class="box-item-right">알림설정</div>
+  </div>
+</div>
+<div class="box">
+<div class="time-item">
+  <div>1번 세탁기<div class="wait">대기 인원 : 3명</div></div>
+  <div class="time">00:39</div>
+  <div class="icon" onclick="toggleDropdown(this)"><span class="material-symbols-outlined">
+    notifications
+    </span>
+    <div id="dropdown" class="dropdown-content" style="display:none;">
+      <a href="#">카이퍼</a>
+      <a href="#">벧엘</a>
+      <a href="#">창조</a>
+      <a href="#">로뎀</a>
+      <a href="#">은혜</a>
+      <a href="#">국제</a>
+      <a href="#">갈대상자</a>
+  </div>
+  </div>
+</div>
+<div class="time-item">
+  <div>1번 세탁기<div class="wait">대기 인원 : 3명</div></div>
+  <div class="time">00:39</div>
+  <div class="icon"><span class="material-symbols-outlined">
+    notifications
+    </span></div>
+</div><div class="time-item">
+  <div>1번 세탁기<div class="wait">대기 인원 : 3명</div></div>
+  <div class="time">00:39</div>
+  <div class="icon"><span class="material-symbols-outlined">
+    notifications
+    </span></div>
+</div>
+</div>
+
+<script>
+  function toggleDropdown(element) {
+    var dropdown = element.getElementsByClassName("dropdown-content")[0];
+    if (dropdown.style.display === "block") {
+        dropdown.style.display = "none";
+    } else {
+        dropdown.style.display = "block";
+    }
+  }
+</script>
+  
+</body>
+
+</html>
