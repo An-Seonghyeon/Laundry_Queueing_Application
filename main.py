@@ -30,6 +30,7 @@ def reserve():
     washer_id = data.get('washer_id')
     user_id = data.get('user_id')
     wash_time = data.get('wash_time')
+    timestamp: firestore.SERVER_TIMESTAMP
     
     # Firestore에 예약 정보 추가
     reservation_ref = db.collection('reservations').add({

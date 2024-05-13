@@ -1,3 +1,5 @@
+#pip install qrcode[pil]
+
 import qrcode
 
 # URL of the webpage
