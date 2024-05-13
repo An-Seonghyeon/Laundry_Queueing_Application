@@ -5,25 +5,24 @@ from flask import Flask, render_template, request, jsonify
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-## Firebase Service Key ##
-cred = credentials.Certificate('hd-laundry-qr-firebase-adminsdk-jk05n-e56796e24b.json')
+### Firebase Service Key ###
+cred = credentials.Certificate('credentials/hd-laundry-qr-firebase-adminsdk-jk05n-e56796e24b.json')
+
 firebase_admin.initialize_app(cred)
 
 # Firestore 데이터베이스 연결
 db = firestore.client()
 
-
 # Flask 애플리케이션 생성
 app = Flask(__name__)
 
 # 홈 페이지 라우트
-
 @app.route('/')
 def home():
     return render_template('index.html')
 
-# 세탁기 예약 추가
 
+# 세탁기 예약 추가
 @app.route('/reserve', methods=['POST'])
 
 def reserve():
@@ -43,8 +42,7 @@ def reserve():
 
 
 # 모든 예약 조회
-
-@app.route('/reservations', methods=['GET'])
+@app.route('/reservations', methods = ['GET'])
 
 def get_reservations():
     reservations = db.collection('reservations').order_by('timestamp').get()
