@@ -16,13 +16,30 @@ db = firestore.client()
 # Flask 애플리케이션 생성
 app = Flask(__name__)
 
-# 홈 페이지 라우트
-@app.route('/')
+def get_reservations(dormitory, floor):
+    # 기숙사와 층으로 필터링
+    reservations = db.collection('reservations').where('dormitory', '==', dormitory).where('floor', '==', floor).order_by('washer_number').get() 
+    reservation_list = [{'id': res.id, 'data': res.to_dict()} for res in reservations]
+    # time(대기 시간)은 소요시간-(현재시간-시작시간)으로 표기
+    
+    return jsonify(reservation_list), 200
+
+# 홈페이지 라우트
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('index.html')
+    if request.method == 'POST':
+        dormitory = request.form['dormitory']
+        floor = int(request.form['floor'])
+    else:
+        dormitory = 'kuyper'
+        floor = 7
+    
+    reservation_data, _ = get_reservations(dormitory, floor)
+    return render_template('index.html', dormitory=dormitory, floor=floor, reservation_data=reservation_data)
+
 
 # 세탁기 예약 추가
-@app.route('/reserve', methods=['POST'])
+@app.route('/option', methods=['POST'])
 
 def reserve():
     data = request.json # 클라이언트로부터 JSON 데이터 수신
@@ -48,18 +65,9 @@ def reserve():
     
     return jsonify({'status': 'success', 'reservation_id': reservation_ref[1].id}), 201
 
-
-# 예약 조회
-def get_reservations(dormitory, floor):
-    # 기숙사와 층으로 필터링
-    reservations = db.collection('reservations').where('dormitory', '==', dormitory).where('floor', '==', floor).order_by('washer_number').get() 
-    reservation_list = [{'id': res.id, 'data': res.to_dict()} for res in reservations]
-     # time(대기 시간)은 소요시간-(현재시간-시작시간)으로 표기
-    
-    return jsonify(reservation_list), 200
-
-
 if __name__ == '__main__':
 
     app.run(debug=True)
 
+# header(기숙사), under_header(층), (세탁기 번호 => QR로 불러 와야 함)
+# QR read시 해당 페이지 뜨도록 하는 것은 => QR 소스코드로 작성
