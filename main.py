@@ -7,7 +7,7 @@ from firebase_admin import credentials, firestore
 
 ### Firebase Service Key ###
 cred = credentials.Certificate('credentials/hd-laundry-qr-firebase-adminsdk-jk05n-e56796e24b.json')
-
+ 
 firebase_admin.initialize_app(cred)
 
 # Firestore 데이터베이스 연결
