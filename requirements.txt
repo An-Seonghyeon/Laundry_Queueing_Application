@@ -1,0 +1,6 @@
+Flask==2.0.1
+Flask-SQLAlchemy
+firebase-admin
+gunicorn
+requests
+werkzeug==2.0.3
