@@ -21,7 +21,6 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
-
 # 세탁기 예약 추가
 @app.route('/reserve', methods=['POST'])
 
@@ -29,28 +28,38 @@ def reserve():
     data = request.json # 클라이언트로부터 JSON 데이터 수신
     washer_id = data.get('washer_id')
     user_id = data.get('user_id')
+    start_time = data.get('start_time')
     wash_time = data.get('wash_time')
     timestamp: firestore.SERVER_TIMESTAMP
     
+    # washer_id를 기숙사, 층, 세탁기 번호로 분리하여 저장
+    dormitory, floor, washer_number = washer_id.split('_')
+    
     # Firestore에 예약 정보 추가
     reservation_ref = db.collection('reservations').add({
-        'washer_id': washer_id,
+        'dormitory': dormitory,
+        'floor': floor,
+        'washer_number': washer_number,
         'user_id': user_id,
+        'start_time' : start_time,
+        'wash_time' : wash_time,
         'timestamp': firestore.SERVER_TIMESTAMP
-        })
+    })
     
     return jsonify({'status': 'success', 'reservation_id': reservation_ref[1].id}), 201
 
 
-# 모든 예약 조회
-@app.route('/reservations', methods = ['GET'])
-
-def get_reservations():
-    reservations = db.collection('reservations').order_by('timestamp').get()
+# 예약 조회
+def get_reservations(dormitory, floor):
+    # 기숙사와 층으로 필터링
+    reservations = db.collection('reservations').where('dormitory', '==', dormitory).where('floor', '==', floor).order_by('washer_number').get() 
     reservation_list = [{'id': res.id, 'data': res.to_dict()} for res in reservations]
+     # time(대기 시간)은 소요시간-(현재시간-시작시간)으로 표기
     
     return jsonify(reservation_list), 200
 
 
 if __name__ == '__main__':
+
     app.run(debug=True)
+
