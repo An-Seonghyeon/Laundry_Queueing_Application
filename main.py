@@ -12,7 +12,7 @@ firebase_admin.initialize_app(cred)
 
 # Firestore 데이터베이스 연결
 db = firestore.client()
-
+ 
 # Flask 애플리케이션 생성
 app = Flask(__name__)
 
