@@ -22,7 +22,6 @@ app = Flask(__name__, template_folder=os.path.join(os.path.dirname(os.path.abspa
 
 # DB column
 # Dorm/floor/washer_num/user_email/end_time
-# Dorm/floor/washer_num => washer_id 개별로 끊어서 진행
 # end time = 현재시간+소요시간
 
 def get_washer_info(dormitory, floor):
