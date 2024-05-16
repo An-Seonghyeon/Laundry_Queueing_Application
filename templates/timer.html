@@ -10,11 +10,22 @@
 <h1>Countdown Timer</h1>
 <div id="timer">00:00:00</div>
 
+<!-- Input fields for user to set the time -->
+<div>
+    <label for="hours">Hours: </label>
+    <input type="number" id="hours" min="0" value="0">
+    <label for="minutes">Minutes: </label>
+    <input type="number" id="minutes" min="0" value="0">
+    <label for="seconds">Seconds: </label>
+    <input type="number" id="seconds" min="0" value="0">
+    <button onclick="startCountdown()">Start Countdown</button>
+</div>
+
 <script>
-// Set initial time values (for example, 1 hour, 0 minutes, and 0 seconds)
+// Define variables to hold time values
 let seconds = 0;
 let minutes = 0;
-let hours = 1;
+let hours = 0;
 
 // Define vars to hold "display" value
 let displaySeconds = 0;
@@ -51,8 +62,16 @@ function countdown() {
     document.getElementById("timer").innerText = displayHours + ":" + displayMinutes + ":" + displaySeconds;
 }
 
-window.onload = function() {
-    // Start the countdown timer as soon as the window loads
+function startCountdown() {
+    // Get the values from the input fields
+    hours = parseInt(document.getElementById("hours").value);
+    minutes = parseInt(document.getElementById("minutes").value);
+    seconds = parseInt(document.getElementById("seconds").value);
+
+    // Clear any existing interval to avoid multiple countdowns running simultaneously
+    clearInterval(interval);
+
+    // Start the countdown timer
     interval = setInterval(countdown, 1000);
 }
 </script>
