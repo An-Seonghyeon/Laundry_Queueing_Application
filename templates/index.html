@@ -103,6 +103,22 @@
     'opsz' 24
   }
 
+    /* Notification icon styling */
+    .notification-icon {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  }
+  .notification-icon.active {
+    font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  }
+
   .dropdown-menu {
       width: 100%;
       left: 0;
@@ -130,6 +146,45 @@
       transform: translateY(-50%);
     }
 
+    .popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 70%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+  }
+  .popup input[type="email"] {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .popup button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .popup button:hover {
+    background-color: #0056b3;
+  }
+  .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 24px;
+  }
 </style>
 </head>
 <body>
@@ -142,12 +197,13 @@
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" onclick="setSecondDropdownItems(event)">
     <li><a class="dropdown-item" href="#" data-id="b1">하용조관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b2">벧엘관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b3">창조관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b4">로뎀관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b5">은혜관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b6">국제관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b7">갈대상자관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="b2">비전관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="b3">벧엘관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="b4">창조관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="b5">로뎀관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="b6">은혜관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="b7">국제관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="b8">갈대상자관</a></li>
   </ul>
 </div>
 
@@ -165,6 +221,9 @@
     <li><a class="dropdown-item" href="#" data-id="f5">5층</a></li>
     <li><a class="dropdown-item" href="#" data-id="f6">6층</a></li>
     <li><a class="dropdown-item" href="#" data-id="f7">7층</a></li>
+    <li><a class="dropdown-item" href="#" data-id="f8">8층</a></li>
+    <li><a class="dropdown-item" href="#" data-id="f9">9층</a></li>
+    <li><a class="dropdown-item" href="#" data-id="f10">10층</a></li>
   </ul>
 </div>
 
@@ -176,7 +235,7 @@
   </div>
 </div>
 
-<div class="box">
+<!-- <div class="box">
 <div class="time-item">
   <div>1번 세탁기<div class="wait">대기 인원 : 3명</div></div>
   <div class="time">00:39</div>
@@ -198,7 +257,20 @@
     notifications
     </span></div>
 </div>
+</div> -->
+
+<!-- Container to display washer information -->
+<div id="washer-container"></div>
+
+<!-- Popup for email submission -->
+<div id="notification-popup" class="popup">
+  <span class="close-btn" onclick="hidePopup()">&times;</span>
+  <h2>Get Notifications</h2>
+  <p>Enter your email address to receive notifications:</p>
+  <input type="email" id="email-input" placeholder="Your email address">
+  <button id="submit-btn">Submit</button>
 </div>
+
 
 <!-- Bootstrap JS (optional) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -211,6 +283,7 @@
     document.getElementById('dropdownMenuButton2').setAttribute('data-id', itemId);
     // Assuming you have a function to fetch data from the server based on the selected IDs
     fetchDataFromServer();
+    simulateDataFetchAndUpdate()
   }
 
   function setSecondDropdownItems(event) {
@@ -223,18 +296,19 @@
     // Add items based on selected b ID
     switch (selectedBId) {
       case 'b1':
-        addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5', '6', '7']);
-        break;
-      case 'b3':
-      case 'b5':
-      case 'b7':
-        addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5']);
-        break;
-      case 'b6':
-        addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4']);
+        addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
         break;
       case 'b2':
       case 'b4':
+      case 'b6':
+      case 'b8':
+        addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5']);
+        break;
+      case 'b7':
+        addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4']);
+        break;
+      case 'b3':
+      case 'b5':
         addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5', '6']);
         break;
       // Add cases for other bs if needed
@@ -250,21 +324,102 @@
     });
   }
 
-  function fetchDataFromServer() {
-    // Example: Assume you have an endpoint '/data' that takes bId and floorId as parameters
+
+  function fetchDataAndUpdate() {
+  // Get selected building and floor
     var bId = document.getElementById('dropdownMenuButton1').getAttribute('data-id');
     var floorId = document.getElementById('dropdownMenuButton2').getAttribute('data-id');
-    fetch(`/data?bId=${bId}&floorId=${floorId}`)
-      .then(response => response.json())
-      .then(data => {
-        // Handle the retrieved data as needed
-        console.log(data);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
+
+  // Make a request to your backend with the selected building and floor
+  fetch(`/fetchDataFromFirebase?building=${bId}&floor=${floorId}`)
+    .then(response => response.json())
+    .then(data => {
+      // Clear previous washer information
+      document.getElementById('washer-container').innerHTML = '';
+
+      // Iterate over each washer and append its information below the previous one
+      data.forEach(washer => {
+        var washerItem = document.createElement('div');
+        washerItem.className = 'time-item';
+        washerItem.innerHTML = `
+          <div>${washer.number}번 세탁기 - 대기 인원: ${washer.waitingPeople}명</div>
+          <div class="time">${washer.endTime}</div>
+          <div class="icon"><span class="material-symbols-outlined">notifications</span></div>
+        `;
+        
+        document.getElementById('washer-container').appendChild(washerItem);
       });
+    })
+    .catch(error => console.error('Error fetching data:', error));
   }
 
+  // Simulated data for testing purposes
+var simulatedData = [
+  { number: "1", waitingPeople: 3, endTime: "00:39" },
+  { number: "2", waitingPeople: 1, endTime: "01:15" },
+  // Add more simulated data for additional washers if needed
+];
+
+// Function to simulate fetching data from Firebase based on selected building and floor
+function simulateDataFetchAndUpdate() {
+  // Clear previous washer information
+  document.getElementById('washer-container').innerHTML = '';
+
+  // Simulate fetching and updating data
+  simulatedData.forEach(washer => {
+    var washerItem = document.createElement('div');
+    washerItem.className = 'time-item';
+    washerItem.innerHTML = `
+      <div>${washer.number}번 세탁기<div class="wait">대기 인원: ${washer.waitingPeople}명</div></div>
+      <div class="time">${washer.endTime}</div>
+      <div class="icon"><span class="material-symbols-outlined notification-icon" data-washer="${washer.number}">notifications</span></div>
+    `;
+      // Add event listener to the notification icon
+      var notificationIcon = washerItem.querySelector('.notification-icon');
+      notificationIcon.addEventListener('click', function() {
+        showPopup(washer.number); // Show popup when notification icon is clicked
+      });
+      document.getElementById('washer-container').appendChild(washerItem);
+    });
+  }
+
+  // Function to show the popup
+  function showPopup(washerNumber) {
+    var popup = document.getElementById('notification-popup');
+    popup.style.display = 'block';
+    // Set data attribute to identify which washer's notification icon was clicked
+    document.getElementById('submit-btn').setAttribute('data-washer', washerNumber);
+  }
+
+  // Function to hide the popup
+  function hidePopup() {
+    var popup = document.getElementById('notification-popup');
+    popup.style.display = 'none';
+  }
+
+  // Function to handle form submission
+  function handleSubmit() {
+    var emailInput = document.getElementById('email-input');
+    var email = emailInput.value.trim();
+    var washerNumber = document.getElementById('submit-btn').getAttribute('data-washer');
+    // Validate email address (you can add more validation if needed)
+    if (email !== '') {
+      // Here you can submit the email address to your backend or do any other action
+      console.log('Email submitted:', email);
+      hidePopup(); // Hide the popup after submission
+      // Change notification icon style
+      var notificationIcon = document.querySelector(`.notification-icon[data-washer="${washerNumber}"]`);
+      notificationIcon.classList.add('active');
+      emailInput.value = "";
+    } else {
+      alert('Please enter a valid email address.');
+    }
+  }
+
+  // Add event listener to the submit button
+  document.getElementById('submit-btn').addEventListener('click', handleSubmit);
+
+  simulateDataFetchAndUpdate();
 </script>
 
 </body>
