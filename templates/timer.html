@@ -3,12 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simple Timer</title>
+<title>Simple Countdown Timer</title>
 </head>
 <body>
 
-<h1>Timer</h1>
+<h1>Countdown Timer</h1>
 <div id="timer">00:00:00</div>
+
+<!-- Input fields for user to set the time -->
+<div>
+    <label for="hours">Hours: </label>
+    <input type="number" id="hours" min="0" value="0">
+    <label for="minutes">Minutes: </label>
+    <input type="number" id="minutes" min="0" value="0">
+    <label for="seconds">Seconds: </label>
+    <input type="number" id="seconds" min="0" value="0">
+    <button onclick="startCountdown()">Start Countdown</button>
+</div>
 
 <script>
 // Define variables to hold time values
@@ -24,21 +35,24 @@ let displayHours = 0;
 // Variable to hold setInterval() function
 let interval = null;
 
-// Function to increment next value
-function timer() {
-    seconds++;
-    
-    // Logic to determine when to increment next value
-    if(seconds / 60 === 1){
-        seconds = 0;
-        minutes++;
-
-        if(minutes / 60 === 1){
-            minutes = 0;
-            hours++;
+// Function to decrement time values
+function countdown() {
+    if (seconds === 0 && minutes === 0 && hours === 0) {
+        clearInterval(interval);
+    } else {
+        if (seconds === 0) {
+            seconds = 59;
+            if (minutes === 0) {
+                minutes = 59;
+                hours--;
+            } else {
+                minutes--;
+            }
+        } else {
+            seconds--;
         }
     }
-    
+
     // If seconds/minutes/hours are only one digit, add a leading 0
     displaySeconds = seconds < 10 ? "0" + seconds.toString() : seconds;
     displayMinutes = minutes < 10 ? "0" + minutes.toString() : minutes;
@@ -48,9 +62,17 @@ function timer() {
     document.getElementById("timer").innerText = displayHours + ":" + displayMinutes + ":" + displaySeconds;
 }
 
-window.onload = function() {
-    // Start the timer as soon as the window loads
-    interval = setInterval(timer, 1000);
+function startCountdown() {
+    // Get the values from the input fields
+    hours = parseInt(document.getElementById("hours").value);
+    minutes = parseInt(document.getElementById("minutes").value);
+    seconds = parseInt(document.getElementById("seconds").value);
+
+    // Clear any existing interval to avoid multiple countdowns running simultaneously
+    clearInterval(interval);
+
+    // Start the countdown timer
+    interval = setInterval(countdown, 1000);
 }
 </script>
 
