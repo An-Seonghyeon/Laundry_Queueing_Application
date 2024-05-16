@@ -22,7 +22,7 @@ app = Flask(__name__, template_folder=os.path.join(os.path.dirname(os.path.abspa
 
 # DB column
 # Dorm/floor/washer_num/user_email/end_time
-# end time = 현재시간+소요시간
+# end time = 세탁기 사용 등록시 현재 시간+소요 시간
 
 def get_washer_info(dormitory, floor):
     # 기숙사와 층으로 필터링
