@@ -109,7 +109,7 @@
 <!-- First dropdown -->
 <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle full-width-button" id="dropdownMenuButton1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    하용조관
+    {{ dormitory }}
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" onclick="setSecondDropdownItems(event)">
     <li><a class="dropdown-item" href="#" data-id="b1">하용조관</a></li>
@@ -126,7 +126,7 @@
 <!-- Second dropdown -->
 <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle full-width-button" id="dropdownMenuButton2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    1층
+    {{ floor }}
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2" id="secondDropdownMenu" onclick="changeSecondButtonText(event)">
     <!-- Items dynamically generated here -->
