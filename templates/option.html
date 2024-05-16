@@ -137,6 +137,9 @@
     <li><a class="dropdown-item" href="#" data-id="f5">5층</a></li>
     <li><a class="dropdown-item" href="#" data-id="f6">6층</a></li>
     <li><a class="dropdown-item" href="#" data-id="f7">7층</a></li>
+    <li><a class="dropdown-item" href="#" data-id="f8">8층</a></li>
+    <li><a class="dropdown-item" href="#" data-id="f9">9층</a></li>
+    <li><a class="dropdown-item" href="#" data-id="f10">10층</a></li>
   </ul>
 </div>
 
@@ -169,15 +172,15 @@
     // Add items based on selected b ID
     switch (selectedBId) {
       case 'b1':
-        addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5', '6', '7']);
+        addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
         break;
+      case 'b2': 
       case 'b4':
       case 'b6':
       case 'b8':
         addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5']);
         break;
       case 'b7':
-      case 'b2':
         addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4']);
         break;
       case 'b3':
