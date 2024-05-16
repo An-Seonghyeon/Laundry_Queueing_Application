@@ -25,7 +25,7 @@ def get_reservations(dormitory, floor):
     return jsonify(reservation_list), 200
 
 # 홈페이지 라우트
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
         dormitory = request.form['dormitory']
