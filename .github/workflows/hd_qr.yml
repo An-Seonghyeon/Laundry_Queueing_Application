@@ -11,3 +11,8 @@ jobs:
     steps:
     - name: Access Secrets
       run: echo "Secrets ${{ secrets.API_KEY }}"
+
+    - name: Set up env
+      run: |
+        export MY_API_KEY=${{ secrets.API_KEY }}
+        echo "API Key is set"
