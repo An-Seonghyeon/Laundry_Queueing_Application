@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simple Timer</title>
+<title>Simple Countdown Timer</title>
 </head>
 <body>
 
-<h1>Timer</h1>
+<h1>Countdown Timer</h1>
 <div id="timer">00:00:00</div>
 
 <script>
-// Define variables to hold time values
+// Set initial time values (for example, 1 hour, 0 minutes, and 0 seconds)
 let seconds = 0;
 let minutes = 0;
-let hours = 0;
+let hours = 1;
 
 // Define vars to hold "display" value
 let displaySeconds = 0;
@@ -24,21 +24,24 @@ let displayHours = 0;
 // Variable to hold setInterval() function
 let interval = null;
 
-// Function to increment next value
-function timer() {
-    seconds++;
-    
-    // Logic to determine when to increment next value
-    if(seconds / 60 === 1){
-        seconds = 0;
-        minutes++;
-
-        if(minutes / 60 === 1){
-            minutes = 0;
-            hours++;
+// Function to decrement time values
+function countdown() {
+    if (seconds === 0 && minutes === 0 && hours === 0) {
+        clearInterval(interval);
+    } else {
+        if (seconds === 0) {
+            seconds = 59;
+            if (minutes === 0) {
+                minutes = 59;
+                hours--;
+            } else {
+                minutes--;
+            }
+        } else {
+            seconds--;
         }
     }
-    
+
     // If seconds/minutes/hours are only one digit, add a leading 0
     displaySeconds = seconds < 10 ? "0" + seconds.toString() : seconds;
     displayMinutes = minutes < 10 ? "0" + minutes.toString() : minutes;
@@ -49,8 +52,8 @@ function timer() {
 }
 
 window.onload = function() {
-    // Start the timer as soon as the window loads
-    interval = setInterval(timer, 1000);
+    // Start the countdown timer as soon as the window loads
+    interval = setInterval(countdown, 1000);
 }
 </script>
 
