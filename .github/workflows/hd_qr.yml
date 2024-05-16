@@ -10,4 +10,4 @@ jobs:
   
     steps:
     - name: Access Secrets
-      run: echo "Secrets : ${{secrets.API_KEY}}"
+      run: echo "Secrets ${{ secrets.API_KEY }}"
