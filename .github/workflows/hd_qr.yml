@@ -1,14 +1,13 @@
 name: Laundry_Queueing_Application
-  on:
-    push:
-      branches:
-        - main
-  jobs:
-    build:
-      runs-on: ubuntu-latest
 
-      steps:
-
-        - name: Access Secrets
-          run : |
-            echo "Secrets : ${{secrets.API_KEY}}"
+on:
+  push:
+    branches: [ main ]
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+  
+    steps:
+    - name: Access Secrets
+      run : echo "Secrets : ${{secrets.API_KEY}}"
