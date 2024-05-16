@@ -113,12 +113,13 @@
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" onclick="setSecondDropdownItems(event)">
     <li><a class="dropdown-item" href="#" data-id="b1">하용조관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b2">벧엘관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b3">창조관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b4">로뎀관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b5">은혜관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b6">국제관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b7">갈대상자관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="b2">비전관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="b3">벧엘관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="b4">창조관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="b5">로뎀관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="b6">은혜관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="b7">국제관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="b8">갈대상자관</a></li>
   </ul>
 </div>
 
@@ -136,6 +137,9 @@
     <li><a class="dropdown-item" href="#" data-id="f5">5층</a></li>
     <li><a class="dropdown-item" href="#" data-id="f6">6층</a></li>
     <li><a class="dropdown-item" href="#" data-id="f7">7층</a></li>
+    <li><a class="dropdown-item" href="#" data-id="f8">8층</a></li>
+    <li><a class="dropdown-item" href="#" data-id="f9">9층</a></li>
+    <li><a class="dropdown-item" href="#" data-id="f10">10층</a></li>
   </ul>
 </div>
 
@@ -168,18 +172,19 @@
     // Add items based on selected b ID
     switch (selectedBId) {
       case 'b1':
-        addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5', '6', '7']);
+        addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
+        break;
+      case 'b2': 
+      case 'b4':
+      case 'b6':
+      case 'b8':
+        addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5']);
+        break;
+      case 'b7':
+        addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4']);
         break;
       case 'b3':
       case 'b5':
-      case 'b7':
-        addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5']);
-        break;
-      case 'b6':
-        addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4']);
-        break;
-      case 'b2':
-      case 'b4':
         addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5', '6']);
         break;
       // Add cases for other bs if needed
