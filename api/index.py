@@ -1,7 +1,7 @@
-import os
 from flask import Flask, render_template, request, jsonify
 import firebase_admin
 from firebase_admin import credentials, firestore
+import os
 
 ### Firebase Service Key ###
 cred_path = 'credentials/hd-laundry-qr-firebase-adminsdk-jk05n-e56796e24b.json'
@@ -74,15 +74,21 @@ def option():
     if request.method == 'GET':
         washer_id = request.args.get('washer_id')
         if washer_id:
+            # washer_id를 '_'로 분할
             parts = washer_id.split('_')
             dormitory = parts[0]
             floor = parts[1]
             washer_number = parts[2]
 
-            reservations = db.collection('reservations').where('dormitory', '==', dormitory).where('floor', '==', floor).where('washer_number', '==', washer_number).get()
+            # 첫 번째 다큐먼트만 가져옴
+            reservations = db.collection('reservations').where('washer_id', '==', washer_id).limit(1).get()
             reservation_list = [{'id': res.id, 'data': res.to_dict()} for res in reservations]
 
-            return render_template('option.html', dormitory=dormitory, floor=floor, washer_number=washer_number, reservations=reservation_list)
+            if reservation_list:
+                reservation = reservation_list[0]
+                return render_template('option.html', dormitory=dormitory, floor=floor, washer_number=washer_number, reservation=reservation)
+            else:
+                return jsonify({'status': 'error', 'message': 'No reservations found for this washer_id'}), 404
         else:
             return jsonify({'status': 'error', 'message': 'washer_id is required'}), 400
     else:
