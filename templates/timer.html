@@ -3,34 +3,79 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simple Countdown Timer</title>
+<title>시간 입력</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #ffffff;
+    }
+
+    .container {
+        text-align: center;
+    }
+
+    h1 {
+        color: #669966;
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+
+    #timer {
+        font-size: 2em;
+        margin-bottom: 20px;
+        border: none;
+        text-align: center;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 1em;
+        color: #669966;
+        background-color: #ffffff;
+        border: 1px solid #669966;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background-color: #e6f2e6;
+    }
+</style>
 </head>
 <body>
 
-<h1>Countdown Timer</h1>
-<div id="timer">00:00:00</div>
+<div class="container">
+    <h1>시간 입력</h1>
+    <input type="text" id="timer" value="00:00:00" readonly onclick="makeEditable(this)">
 
-<!-- Input fields for user to set the time -->
-<div>
-    <label for="hours">Hours: </label>
-    <input type="number" id="hours" min="0" value="0">
-    <label for="minutes">Minutes: </label>
-    <input type="number" id="minutes" min="0" value="0">
-    <label for="seconds">Seconds: </label>
-    <input type="number" id="seconds" min="0" value="0">
-    <button onclick="startCountdown()">Start Countdown</button>
+    <!-- Buttons for start and cancel actions -->
+    <div class="button-container">
+        <button onclick="startCountdown()" class="btn">시작</button>
+        <button onclick="cancelCountdown()" class="btn">취소</button>
+    </div>
 </div>
 
 <script>
 // Define variables to hold time values
-let seconds = 0;
-let minutes = 0;
 let hours = 0;
+let minutes = 0;
+let seconds = 0;
 
 // Define vars to hold "display" value
-let displaySeconds = 0;
-let displayMinutes = 0;
 let displayHours = 0;
+let displayMinutes = 0;
+let displaySeconds = 0;
 
 // Variable to hold setInterval() function
 let interval = null;
@@ -44,7 +89,9 @@ function countdown() {
             seconds = 59;
             if (minutes === 0) {
                 minutes = 59;
-                hours--;
+                if (hours > 0) {
+                    hours--;
+                }
             } else {
                 minutes--;
             }
@@ -57,22 +104,40 @@ function countdown() {
     displaySeconds = seconds < 10 ? "0" + seconds.toString() : seconds;
     displayMinutes = minutes < 10 ? "0" + minutes.toString() : minutes;
     displayHours = hours < 10 ? "0" + hours.toString() : hours;
-    
+
     // Display updated time values to user
-    document.getElementById("timer").innerText = displayHours + ":" + displayMinutes + ":" + displaySeconds;
+    document.getElementById("timer").value = displayHours + ":" + displayMinutes + ":" + displaySeconds;
 }
 
 function startCountdown() {
-    // Get the values from the input fields
-    hours = parseInt(document.getElementById("hours").value);
-    minutes = parseInt(document.getElementById("minutes").value);
-    seconds = parseInt(document.getElementById("seconds").value);
+    // Get the values from the timer input
+    const timeParts = document.getElementById("timer").value.split(":");
+    hours = parseInt(timeParts[0]);
+    minutes = parseInt(timeParts[1]);
+    seconds = parseInt(timeParts[2]);
 
     // Clear any existing interval to avoid multiple countdowns running simultaneously
     clearInterval(interval);
 
     // Start the countdown timer
     interval = setInterval(countdown, 1000);
+
+    // Set the timer input to read-only
+    document.getElementById("timer").readOnly = true;
+}
+
+function cancelCountdown() {
+    clearInterval(interval);
+    document.getElementById("timer").value = "00:00:00";
+    hours = 0;
+    minutes = 0;
+    seconds = 0;
+}
+
+function makeEditable(timerElement) {
+    timerElement.readOnly = false;
+    timerElement.focus();
+    timerElement.select();
 }
 </script>
 
