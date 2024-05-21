@@ -65,9 +65,9 @@
 </div>
 
 <div class="box">
-  <div class="menu-item" data-bs-toggle="modal" data-bs-target="#emailModal">표준 - Standard</div>
-  <div class="menu-item" data-bs-toggle="modal" data-bs-target="#emailModal">강력 - Powerful</div>
-  <div class="menu-item" onclick="goToTimer()">기타 - Others</div>
+  <div class="menu-item" data-bs-toggle="modal" data-bs-target="#emailModal" onclick="setMode('standard', '{{ reservation.data.washer_id }}', '{{ reservation.data.dormitory }}', '{{ floor }}', '{{ washer_number }}', 50)">표준 - Standard</div>
+  <div class="menu-item" data-bs-toggle="modal" data-bs-target="#emailModal" onclick="setMode('powerful', '{{ reservation.data.washer_id }}', '{{ reservation.data.dormitory }}', '{{ floor }}', '{{ washer_number }}', 60)">강력 - Powerful</div>
+  <div class="menu-item" onclick="goToTimer('{{ reservation.data.dormitory }}', '{{ floor }}', '{{ washer_number }}')">기타 - Others</div>
 </div>
 
 <!-- Email Modal -->
@@ -79,11 +79,17 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="emailForm">
+        <form id="emailForm" action="/submit_email" method="post">
           <div class="mb-3">
             <label for="emailInput" class="form-label">이메일 주소</label>
-            <input type="email" class="form-control" id="emailInput" required>
+            <input type="email" class="form-control" id="emailInput" name="email" required>
           </div>
+          <input type="hidden" id="modeInput" name="mode">
+          <input type="hidden" id="washerIdInput" name="washer_id">
+          <input type="hidden" id="dormitoryInput" name="dormitory">
+          <input type="hidden" id="floorInput" name="floor">
+          <input type="hidden" id="washerNumberInput" name="washer_number">
+          <input type="hidden" id="leftTimeInput" name="left_time">
           <button type="submit" class="btn btn-primary btn-submit">제출</button>
         </form>
       </div>
@@ -91,13 +97,24 @@
   </div>
 </div>
 
-<!-- Bootstrap JS (optional) -->
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 <script>
+  function setMode(mode, washer_id, dormitory, floor, washer_number, duration) {
+    document.getElementById('modeInput').value = mode;
+    document.getElementById('washerIdInput').value = washer_id;
+    document.getElementById('dormitoryInput').value = dormitory;
+    document.getElementById('floorInput').value = floor;
+    document.getElementById('washerNumberInput').value = washer_number;
+    var now = new Date();
+    now.setMinutes(now.getMinutes() + duration);
+    document.getElementById('leftTimeInput').value = now.toISOString();
+  }
+
   document.getElementById('emailForm').addEventListener('submit', function(event) {
     event.preventDefault();
-    window.location.href = 'index.html';
+    this.submit();
   });
 
   function resetBackground() {
@@ -109,8 +126,8 @@
     resetBackground();
   });
 
-  function goToTimer() {
-    window.location.href = 'timer.html';
+  function goToTimer(dormitory, floor, washer_number, reservation_id) {
+    window.location.href = `/timer?dormitory=${dormitory}&floor=${floor}&washer_number=${washer_number}`;
   }
 
   function fetchDataFromServer() {
