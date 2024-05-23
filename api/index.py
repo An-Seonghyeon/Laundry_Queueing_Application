@@ -206,6 +206,7 @@ def timer():
             floor = data.get('floor')
             washer_number = data.get('washer_number')
             end_time = data.get('end_time')
+            washer_id = data.get('washer_id')
 
             now = datetime.now()
             end_time_parts = list(map(int, end_time.split(':')))
@@ -224,7 +225,7 @@ def timer():
             dormitory = request.args.get('dormitory')
             floor = request.args.get('floor')
             washer_number = request.args.get('washer_number')
-            return render_template('timer.html', dormitory=dormitory, floor=floor, washer_number=washer_number)
+            return render_template('timer.html', dormitory=dormitory, floor=floor, washer_id=washer_id)
     except Exception as e:
         print(f"Error in timer route: {e}")
         traceback.print_exc()
