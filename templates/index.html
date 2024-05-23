@@ -7,10 +7,196 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <title>status</title>
 <style>
-  /* 스타일 생략 */
+  body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+  }
+  .under_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+  }
+  .under_under_header {
+    align-items: center;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+  }
+  .color-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #E2F5ED;
+    border-radius: 8px;
+    border: 1px solid #08B783;
+    margin: 10px;
+    color: #5e5d5d;
+    font-size: 0.8em;
+  }
+  .box-item-left {
+    position: relative;
+    left: 20px;
+  }
+  .box-item-right {
+    position: relative;
+    right: 20px;
+  }
+  .font-uner-header {
+    position: relative;
+    left: 10px;
+  }
+
+
+  .time-item {
+    background-color: #fff;
+    padding: 20px;
+    margin: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+  }
+  .nav-bar {
+    display: flex;
+    justify-content: space-around;
+    background-color: #f0f0f0;
+    padding: 10px 0;
+  }
+  .nav-bar img {
+    width: 24px;
+    height: 24px;
+  }
+  .box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+  .wait {
+    color: #5e5d5d;
+    font-size: 0.5em;
+  }
+  .time {
+    position: relative;
+    right: 20px;
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+  }
+
+    /* Notification icon styling */
+    .notification-icon {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  }
+  .notification-icon.active {
+    font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  }
+
+  .dropdown-menu {
+      width: 100%;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+
+  .btn-secondary {
+      --bs-btn-color: #000;
+      --bs-btn-bg: #fff;
+      --bs-btn-border-width: 0;
+    }
+
+  .full-width-button {
+      width: 100%;
+      text-align: center;
+      position: relative;
+      margin-top: 10px;
+    }
+
+  .dropdown-toggle::after {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 70%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+  }
+  .popup input[type="email"] {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .popup button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .popup button:hover {
+    background-color: #0056b3;
+  }
+  .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 24px;
+  }
+  #emailForm {
+    text-align: center;
+  }
+  .btn-submit {
+    background-color: #08B783;
+    border: 0;
+  }
+
 </style>
 </head>
 <body>
+
 
 <!-- First dropdown -->
 <div class="dropdown">
@@ -62,15 +248,6 @@
     <div>세탁기 ID: {{ washer_id }}</div>
 </div>
 
-<!-- Popup for email submission -->
-<div id="notification-popup" class="popup">
-  <span class="close-btn" onclick="hidePopup()">&times;</span>
-  <h2>알림설정</h2>
-  <p>종료 시간에 등록된 이메일로 알림을 전송합니다.</p>
-  <input type="email" id="email-input" placeholder="이메일 입력">
-  <button id="submit-btn">등록</button>
-</div>
-
 <!-- Email Modal -->
 <div class="modal fade" id="emailModal" tabindex="-1" aria-labelledby="emailModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -80,17 +257,23 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="emailForm">
+        <form id="emailForm" action="/submit_email" method="post">
           <div class="mb-3">
             <label for="emailInput" class="form-label">이메일 주소</label>
-            <input type="email" class="form-control" id="emailInput" required>
+            <input type="email" class="form-control" id="emailInput" name="email" required>
           </div>
+          <input type="hidden" id="washerIdInput" name="washer_id">
+          <input type="hidden" id="dormitoryInput" name="dormitory">
+          <input type="hidden" id="floorInput" name="floor">
+          <input type="hidden" id="washerNumberInput" name="washer_number">
+          <input type="hidden" id="leftTimeInput" name="left_time">
           <button type="submit" class="btn btn-primary btn-submit">제출</button>
         </form>
       </div>
     </div>
   </div>
 </div>
+
 
 <!-- Bootstrap JS (optional) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -101,15 +284,18 @@
     var itemId = event.target.getAttribute('data-id');
     document.getElementById('dropdownMenuButton2').innerText = newText;
     document.getElementById('dropdownMenuButton2').setAttribute('data-id', itemId);
+    // Assuming you have a function to fetch data from the server based on the selected IDs
     fetchDataAndUpdate();
   }
 
   function setSecondDropdownItems(event) {
     var selectedBId = event.target.getAttribute('data-id');
     var secondDropdownMenu = document.getElementById('secondDropdownMenu');
+    // Clear existing items
     secondDropdownMenu.innerHTML = '';
     document.getElementById('dropdownMenuButton2').innerText = '층 선택';
 
+    // Add items based on selected b ID
     switch (selectedBId) {
       case 'b1':
         addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
@@ -127,6 +313,7 @@
       case 'b5':
         addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5', '6']);
         break;
+      // Add cases for other bs if needed
     }
     document.getElementById('dropdownMenuButton1').setAttribute('data-id', selectedBId);
     var newText = event.target.textContent;
@@ -140,64 +327,55 @@
   }
 
   function fetchDataAndUpdate() {
+  // Get selected building and floor
     var bId = document.getElementById('dropdownMenuButton1').getAttribute('data-id');
     var floorId = document.getElementById('dropdownMenuButton2').getAttribute('data-id');
 
-    fetch(`/fetchDataFromFirebase?dormitory=${bId}&floor=${floorId}`)
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('washer-container').innerHTML = '';
+  // Make a request to your backend with the selected building and floor
+  fetch(`/fetchDataFromFirebase?dormitory=${bId}&floor=${floorId}`)
+    .then(response => response.json())
+    .then(data => {
+      // Clear previous washer information
+      document.getElementById('washer-container').innerHTML = '';
 
-        data.forEach(washer => {
-          var washerItem = document.createElement('div');
-          washerItem.className = 'time-item';
-          washerItem.innerHTML = `
-            <div>${washer.number}번 세탁기 - 대기 인원: ${washer.waitingPeople}명</div>
-            <div class="time">${washer.endTime}</div>
-            <div class="icon"><span class="material-symbols-outlined notification-icon" data-washer="${washer.number}" data-bs-toggle="modal" data-bs-target="#emailModal">notifications</span></div>
-          `;
-
-          var notificationIcon = washerItem.querySelector('.notification-icon');
-          notificationIcon.addEventListener('click', function() {
-            showPopup(washer.number);
-          });
-
-          document.getElementById('washer-container').appendChild(washerItem);
-        });
-      })
-      .catch(error => console.error('Error fetching data:', error));
+      // Iterate over each washer and append its information below the previous one
+      data.forEach(washer => {
+        var washerItem = document.createElement('div');
+        washerItem.className = 'time-item';
+        washerItem.innerHTML = `
+        <div>${washer.number}번 세탁기<div class="wait">대기 인원: ${washer.waitingPeople}명</div></div>
+      <div class="time">${washer.endTime}</div>
+      <div class="icon"><span class="material-symbols-outlined notification-icon" data-washer="${washer.number}" data-bs-toggle="modal" data-bs-target="#emailModal">notifications</span></div>
+    `;
+        // Add event listener to the notification icon
+      var notificationIcon = washerItem.querySelector('.notification-icon');
+      notificationIcon.addEventListener('click', function() {
+        onclick="setMode('{{ reservation.data.washer_id }}')"; // Show popup when notification icon is clicked
+      });
+      document.getElementById('washer-container').appendChild(washerItem);
+      });
+    })
+    .catch(error => console.error('Error fetching data:', error));
   }
 
-  function showPopup(washerNumber) {
-    var submitBtn = document.getElementById('submit-btn');
-    submitBtn.setAttribute('data-washer', washerNumber);
-    var emailModal = new bootstrap.Modal(document.getElementById('emailModal'));
-    emailModal.show();
+  function setMode(washer_id) {
+    document.getElementById('washerIdInput').value = washer_id;
   }
 
-  function handleSubmit() {
-    var emailInput = document.getElementById('emailInput');
-    var email = emailInput.value.trim();
-    var washerNumber = document.getElementById('submit-btn').getAttribute('data-washer');
+  document.getElementById('emailForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    this.submit();
+  });
 
-    if (email !== '') {
-      console.log('Email submitted:', email);
-
-      var notificationIcon = document.querySelector(`.notification-icon[data-washer="${washerNumber}"]`);
-      notificationIcon.classList.add('active');
-
-      var emailModal = new bootstrap.Modal(document.getElementById('emailModal'));
-      emailModal.hide();
-
-      emailInput.value = "";
-    } else {
-      alert('Please enter a valid email address.');
-    }
+  function resetBackground() {
+    document.body.style.backgroundColor = ''; // 배경색 원래대로 복구
   }
 
-  document.getElementById('submit-btn').addEventListener('click', handleSubmit);
+  var emailModal = document.getElementById('emailModal');
+  emailModal.addEventListener('hidden.bs.modal', function () {
+    resetBackground();
+  });
 
-  fetchDataAndUpdate();
 </script>
 
 </body>
