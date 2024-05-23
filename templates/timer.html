@@ -62,6 +62,7 @@
         <input type="hidden" name="dormitory" value="{{ dormitory }}">
         <input type="hidden" name="floor" value="{{ floor }}">
         <input type="hidden" name="washer_number" value="{{ washer_number }}">
+        <input type="hidden" name="washer_id" value="{{ washer_id }}">
         <input type="hidden" name="left_time" id="leftTimeInput">
         <input type="number" id="timer" name="end_time" value="0" min="0" max="999" readonly onclick="makeEditable(this)">
         
@@ -87,6 +88,7 @@
             <label for="emailInput" class="form-label">이메일 주소</label>
             <input type="email" class="form-control" id="emailInput" name="email" required>
           </div>
+          <input type="hidden" id="washerIdInput" name="washer_id" value="{{ washer_id }}">
           <input type="hidden" id="dormitoryInput" name="dormitory" value="{{ dormitory }}">
           <input type="hidden" id="floorInput" name="floor" value="{{ floor }}">
           <input type="hidden" id="washerNumberInput" name="washer_number" value="{{ washer_number }}">
@@ -138,6 +140,7 @@ document.getElementById('emailForm').addEventListener('submit', function(event) 
     document.getElementById('floorInput').value = document.querySelector('input[name="floor"]').value;
     document.getElementById('washerNumberInput').value = document.querySelector('input[name="washer_number"]').value;
     document.getElementById('endTimeInput').value = document.getElementById('timer').value;
+    document.getElementById('washerIdInput').value = document.querySelector('input[name="washer_id"]').value;
 
     this.submit();
 });
