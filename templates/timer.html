@@ -155,6 +155,8 @@ function startCountdown() {
     document.getElementById("leftTimeInput").value = now.toISOString();
 
     document.getElementById("timer").readOnly = true;
+
+    showEmailModal(); // 이메일 모달 표시
 }
 
 function cancelCountdown() {
