@@ -57,13 +57,13 @@
 <body>
 <div class="container">
 <div class="time_container">
-    <h1>시간 입력</h1>
+    <h1>시간 입력dd</h1>
     <form id="timerForm" action="/timer" method="post">
         <input type="hidden" name="dormitory" value="{{ dormitory }}">
         <input type="hidden" name="floor" value="{{ floor }}">
         <input type="hidden" name="washer_number" value="{{ washer_number }}">
         <input type="hidden" name="left_time" id="leftTimeInput">
-        <input type="text" id="timer" name="end_time" value="00:00" readonly onclick="makeEditable(this)">
+        <input type="number" id="timer" name="end_time" value="0" min="0" max="999" readonly onclick="makeEditable(this)">
         
         <div class="button-container">
             <button type="button" onclick="startCountdown()" class="btn">시작</button>
@@ -102,21 +102,11 @@
 
 <script>
 
-
 function startCountdown() {
-    const timeParts = document.getElementById("timer").value.split(":");
-    hours = parseInt(timeParts[0]);
-    minutes = parseInt(timeParts[1]);
-    seconds = parseInt(timeParts[2]);
-
-    clearInterval(interval);
-
-    interval = setInterval(countdown, 1000);
+    const minutes = parseInt(document.getElementById("timer").value) || 0;
 
     var now = new Date();
-    now.setHours(now.getHours() + hours);
     now.setMinutes(now.getMinutes() + minutes);
-    now.setSeconds(now.getSeconds() + seconds);
 
     document.getElementById("leftTimeInput").value = now.toISOString();
 
@@ -142,9 +132,8 @@ function showEmailModal() {
 
 document.getElementById('emailForm').addEventListener('submit', function(event) {
     event.preventDefault();
-    const timeParts = document.getElementById("timer").value.split(":");
-    const totalMinutes = (parseInt(timeParts[0]) || 0) * 60 + (parseInt(timeParts[1]) || 0);
-    document.getElementById('endTimeInput').value = isNaN(totalMinutes) ? 0 : totalMinutes;
+    const minutes = parseInt(document.getElementById("timer").value) || 0;
+    document.getElementById('endTimeInput').value = isNaN(minutes) ? 0 : minutes;
     this.submit();
 });
 </script>
