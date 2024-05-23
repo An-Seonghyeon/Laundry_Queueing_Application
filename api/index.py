@@ -6,7 +6,7 @@ import traceback
 from datetime import datetime, timedelta
 
 ### Firebase Service Key ###
-cred_path = 'credentials/hd-laundry-qr-firebase-adminsdk-jk05n-e56796e24b.json'
+cred_path = '../credentials/hd-laundry-qr-firebase-adminsdk-jk05n-e56796e24b.json'
 if not firebase_admin._apps:
     cred = credentials.Certificate(cred_path)
     firebase_admin.initialize_app(cred)
