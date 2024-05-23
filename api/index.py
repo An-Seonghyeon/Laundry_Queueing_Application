@@ -89,7 +89,46 @@ def index():
         print(f"Error in index route: {e}")
         traceback.print_exc()
         return jsonify({'status': 'error', 'message': str(e)}), 500
+    
+@app.route('/fetchDataFromFirebase', methods=['GET'])
+def fetch_data_from_firebase():
+    try:
+        dormitory = request.args.get('dormitory')
+        floor = request.args.get('floor')
 
+        if dormitory and floor:
+            floor = int(floor)
+            washer_info = get_washer_info(dormitory, floor)
+
+            washer_list = []
+            washer_nums = [res['data']['washer_number'] for res in washer_info]
+            unique_washer_nums = list(set(washer_nums))
+
+            for washer_num in unique_washer_nums:
+                waiting_user = sum(1 for res in washer_info if res['data']['washer_number'] == washer_num)
+                if waiting_user > 0:
+                    waiting_times = [res['data']['end_time'] for res in washer_info if res['data']['washer_number'] == washer_num]
+                    waiting_time = min(waiting_times)
+                else:
+                    waiting_time = 0
+
+                washer_list.append({
+                    'number': washer_num,
+                    'waitingPeople': waiting_user,
+                    'endTime': waiting_time
+                })
+
+            return jsonify(washer_list), 200
+        else:
+            return jsonify([]), 200
+        
+    except Exception as e:
+        print(f"Error in fetch_data_from_firebase: {e}")
+        
+        traceback.print_exc()
+        
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+    
 @app.route('/option', methods=['GET', 'POST'])
 def option():
     try:
