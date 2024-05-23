@@ -26,28 +26,25 @@ def get_washer_info(dormitory, floor):
         washers = {}
         for res in reservation_list:
             washer_number = res['data']['washer_number']
-            if washer_number not in washers:
-                washers[washer_number] = {
+            washer_id = f"{dormitory}_{floor_number}_{washer_number}"
+            if washer_id not in washers:
+                washers[washer_id] = {
                     'number': washer_number,
                     'waitingPeople': 0,
                     'endTime': None
                 }
-            washers[washer_number]['waitingPeople'] += 1
-            if not washers[washer_number]['endTime'] or res['data']['end_time'] < washers[washer_number]['endTime']:
-                washers[washer_number]['endTime'] = res['data']['end_time']
+            washers[washer_id]['waitingPeople'] += 1
 
-        washer_info = list(washers.values())
-
-        waiting_data = db.collection('waiting').where('washer_id', 'in', [f"{dormitory}_{floor_number}_{washer['number']}" for washer in washer_info]).get()
+        waiting_data = db.collection('waiting').where('washer_id', 'in', list(washers.keys())).get()
         waiting_list = [{'id': wait.id, 'data': wait.to_dict()} for wait in waiting_data]
 
         for wait in waiting_list:
             washer_id = wait['data']['washer_id']
             left_time = wait['data']['left_time']
-            for washer in washer_info:
-                if washer['number'] == washer_id.split('_')[-1]:  # assuming washer_id is formatted like dormitory_floor_washer_number
-                    washer['endTime'] = datetime.fromtimestamp(left_time).strftime('%H:%M:%S')
+            if washer_id in washers:
+                washers[washer_id]['endTime'] = datetime.fromtimestamp(left_time).strftime('%H:%M:%S')
 
+        washer_info = list(washers.values())
         return washer_info
     except Exception as e:
         print(f"Error in get_washer_info: {e}")
@@ -83,15 +80,14 @@ def reserve_idx():
 def index():
     try:
         if request.method == 'GET':
-            dormitory = request.args.get('dormitory')
-            floor = request.args.get('floor')
+            dormitory = request.args.get('dormitory', '기숙사를 선택해주세요')
+            floor = request.args.get('floor', '층을 선택해주세요')
 
-            if dormitory and floor:
+            washer_list = []
+            if dormitory != '기숙사를 선택해주세요' and floor != '층을 선택해주세요':
                 washer_list = get_washer_info(dormitory, floor)
-            else:
-                washer_list = []
 
-            return render_template('index.html', dormitory='기숙사를 선택해주세요', floor='층을 선택해주세요', washer_list=washer_list)
+            return render_template('index.html', dormitory=dormitory, floor=floor, washer_list=washer_list)
         else:
             return reserve_idx()
     except Exception as e:
