@@ -75,7 +75,10 @@ def index():
                     else:
                         waiting_time = 0
 
-                    washer_list.append((washer_num, waiting_user, waiting_time))
+                    washer_list.append({
+                        'number':washer_num, 
+                        'waitingPeople': waiting_user, 
+                        'endTime': waiting_time})
             else:
                 washer_list = []
 
