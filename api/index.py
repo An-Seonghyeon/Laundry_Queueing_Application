@@ -25,6 +25,7 @@ def get_washer_info(dormitory, floor):
     except Exception as e:
         print(f"Error in get_washer_info: {e}")
         traceback.print_exc()
+        return []
 
 def reserve_idx():
     try:
@@ -56,24 +57,29 @@ def index():
     try:
         if request.method == 'GET':
             dormitory = request.args.get('dormitory')
-            floor = int(request.args.get('floor'))
-            washer_info = get_washer_info(dormitory, floor)
+            floor = request.args.get('floor')
 
-            washer_list = []
-            washer_nums = [res['data']['washer_number'] for res in washer_info]
-            unique_washer_nums = list(set(washer_nums))
+            if dormitory and floor:
+                floor = int(floor)
+                washer_info = get_washer_info(dormitory, floor)
 
-            for washer_num in unique_washer_nums:
-                waiting_user = sum(1 for res in washer_info if res['data']['washer_number'] == washer_num)
-                if waiting_user > 0:
-                    waiting_times = [res['data']['end_time'] for res in washer_info if res['data']['washer_number'] == washer_num]
-                    waiting_time = min(waiting_times)
-                else:
-                    waiting_time = 0
+                washer_list = []
+                washer_nums = [res['data']['washer_number'] for res in washer_info]
+                unique_washer_nums = list(set(washer_nums))
 
-                washer_list.append((washer_num, waiting_user, waiting_time))
+                for washer_num in unique_washer_nums:
+                    waiting_user = sum(1 for res in washer_info if res['data']['washer_number'] == washer_num)
+                    if waiting_user > 0:
+                        waiting_times = [res['data']['end_time'] for res in washer_info if res['data']['washer_number'] == washer_num]
+                        waiting_time = min(waiting_times)
+                    else:
+                        waiting_time = 0
 
-            return render_template('index.html', dormitory=dormitory, floor=floor, washer_list=washer_list)
+                    washer_list.append((washer_num, waiting_user, waiting_time))
+            else:
+                washer_list = []
+
+            return render_template('index.html', dormitory='기숙사를 선택해주세요', floor='층을 선택해주세요', washer_list=washer_list)
         else:
             return reserve_idx()
     except Exception as e:
