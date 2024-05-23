@@ -166,13 +166,16 @@ def submit_email():
         floor = data.get('floor')
         washer_number = data.get('washer_number')
         mode = data.get('mode', None)
-
+        end_time = data.get('end_time', None)
         # Calculate the left_time based on mode
         now = datetime.now()
         if mode == 'standard':
             left_time = now + timedelta(minutes=50)
         elif mode == 'powerful':
             left_time = now + timedelta(minutes=60)
+        elif end_time:
+            end_time_parts = list(map(int, end_time.split(':')))
+            left_time = now + timedelta(hours=end_time_parts[0], minutes=end_time_parts[1], seconds=end_time_parts[2])
         else:
             return jsonify({'status': 'error', 'message': 'Invalid mode selected'}), 400
 
