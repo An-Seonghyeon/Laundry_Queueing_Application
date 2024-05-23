@@ -108,7 +108,8 @@ def fetch_data_from_firebase():
 
         if dormitory and floor:
             washer_list = get_washer_info(dormitory, floor)
-            return jsonify(washer_list), 200
+            # return jsonify(washer_list), 200
+            return jsonify([{'number':1,'endTime':123,'waitingPeople':213}]), 200
         else:
             return jsonify([]), 200
         
