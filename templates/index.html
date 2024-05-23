@@ -185,6 +185,13 @@
     cursor: pointer;
     font-size: 24px;
   }
+  #emailForm {
+    text-align: center;
+  }
+  .btn-submit {
+    background-color: #08B783;
+    border: 0;
+  }
 </style>
 </head>
 <body>
@@ -235,40 +242,38 @@
   </div>
 </div>
 
-<!-- <div class="box">
-<div class="time-item">
-  <div>1번 세탁기<div class="wait">대기 인원 : 3명</div></div>
-  <div class="time">00:39</div>
-  <div class="icon" onclick="toggleDropdown(this)"><span class="material-symbols-outlined">
-    notifications
-    </span>
-  </div>
-</div>
-<div class="time-item">
-  <div>1번 세탁기<div class="wait">대기 인원 : 3명</div></div>
-  <div class="time">00:39</div>
-  <div class="icon"><span class="material-symbols-outlined">
-    notifications
-    </span></div>
-</div><div class="time-item">
-  <div>1번 세탁기<div class="wait">대기 인원 : 3명</div></div>
-  <div class="time">00:39</div>
-  <div class="icon"><span class="material-symbols-outlined">
-    notifications
-    </span></div>
-</div>
-</div> -->
-
 <!-- Container to display washer information -->
 <div id="washer-container"></div>
 
 <!-- Popup for email submission -->
 <div id="notification-popup" class="popup">
   <span class="close-btn" onclick="hidePopup()">&times;</span>
-  <h2>Get Notifications</h2>
-  <p>Enter your email address to receive notifications:</p>
-  <input type="email" id="email-input" placeholder="Your email address">
-  <button id="submit-btn">Submit</button>
+  <h2>알림설정</h2>
+  <p>종료 시간에 등록된 이메일로 알림을 전송합니다.</p>
+  <input type="email" id="email-input" placeholder="이메일 입력">
+  <button id="submit-btn">등록</button>
+</div>
+
+
+<!-- Email Modal -->
+<div class="modal fade" id="emailModal" tabindex="-1" aria-labelledby="emailModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="emailModalLabel">이메일 입력</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="emailForm">
+          <div class="mb-3">
+            <label for="emailInput" class="form-label">이메일 주소</label>
+            <input type="email" class="form-control" id="emailInput" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-submit">제출</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -331,7 +336,7 @@
     var floorId = document.getElementById('dropdownMenuButton2').getAttribute('data-id');
 
   // Make a request to your backend with the selected building and floor
-  fetch(`/fetchDataFromFirebase?building=${bId}&floor=${floorId}`)
+  fetch(`/fetchDataFromFirebase?dormitory=${bId}&floor=${floorId}`)
     .then(response => response.json())
     .then(data => {
       // Clear previous washer information
@@ -355,8 +360,12 @@
 
   // Simulated data for testing purposes
 var simulatedData = [
-  { number: "1", waitingPeople: 3, endTime: "00:39" },
-  { number: "2", waitingPeople: 1, endTime: "01:15" },
+  { number: "1", waitingPeople: 0, endTime: "00:00" },
+  { number: "2", waitingPeople: 0, endTime: "00:00" },
+  { number: "3", waitingPeople: 0, endTime: "00:00" },
+  { number: "4", waitingPeople: 0, endTime: "00:00" },
+  { number: "5", waitingPeople: 0, endTime: "00:00" },
+  { number: "6", waitingPeople: 0, endTime: "00:00" },
   // Add more simulated data for additional washers if needed
 ];
 
@@ -372,7 +381,7 @@ function simulateDataFetchAndUpdate() {
     washerItem.innerHTML = `
       <div>${washer.number}번 세탁기<div class="wait">대기 인원: ${washer.waitingPeople}명</div></div>
       <div class="time">${washer.endTime}</div>
-      <div class="icon"><span class="material-symbols-outlined notification-icon" data-washer="${washer.number}">notifications</span></div>
+      <div class="icon"><span class="material-symbols-outlined notification-icon" data-washer="${washer.number}" data-bs-toggle="modal" data-bs-target="#emailModal">notifications</span></div>
     `;
       // Add event listener to the notification icon
       var notificationIcon = washerItem.querySelector('.notification-icon');
@@ -383,19 +392,15 @@ function simulateDataFetchAndUpdate() {
     });
   }
 
-  // Function to show the popup
-  function showPopup(washerNumber) {
-    var popup = document.getElementById('notification-popup');
-    popup.style.display = 'block';
-    // Set data attribute to identify which washer's notification icon was clicked
-    document.getElementById('submit-btn').setAttribute('data-washer', washerNumber);
+  function resetBackground() {
+    document.body.style.backgroundColor = ''; // 배경색 원래대로 복구
   }
 
-  // Function to hide the popup
-  function hidePopup() {
-    var popup = document.getElementById('notification-popup');
-    popup.style.display = 'none';
-  }
+  var emailModal = document.getElementById('emailModal');
+  emailModal.addEventListener('hidden.bs.modal', function () {
+    resetBackground();
+  });
+
 
   // Function to handle form submission
   function handleSubmit() {
