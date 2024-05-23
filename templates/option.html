@@ -67,7 +67,7 @@
 <div class="box">
   <div class="menu-item" data-bs-toggle="modal" data-bs-target="#emailModal" onclick="setMode('standard', '{{ reservation.data.washer_id }}', '{{ reservation.data.dormitory }}', '{{ floor }}', '{{ washer_number }}', 50)">표준 - Standard</div>
   <div class="menu-item" data-bs-toggle="modal" data-bs-target="#emailModal" onclick="setMode('powerful', '{{ reservation.data.washer_id }}', '{{ reservation.data.dormitory }}', '{{ floor }}', '{{ washer_number }}', 60)">강력 - Powerful</div>
-  <div class="menu-item" onclick="goToTimer('{{ reservation.data.dormitory }}', '{{ floor }}', '{{ washer_number }}')">기타 - Others</div>
+  <div class="menu-item" onclick="goToTimer('{{ reservation.data.washer_id }}')">기타 - Others</div>
 </div>
 
 <!-- Email Modal -->
@@ -85,7 +85,7 @@
             <input type="email" class="form-control" id="emailInput" name="email" required>
           </div>
           <input type="hidden" id="modeInput" name="mode">
-          <input type="hidden" id="washerIdInput" name="washer_id">
+          <input type="hidden" id="washerIdInput" name="reservation.data.washer_id">
           <input type="hidden" id="dormitoryInput" name="dormitory">
           <input type="hidden" id="floorInput" name="floor">
           <input type="hidden" id="washerNumberInput" name="washer_number">
@@ -126,8 +126,8 @@
     resetBackground();
   });
 
-  function goToTimer(dormitory, floor, washer_number, reservation_id) {
-    window.location.href = `/timer?dormitory=${dormitory}&floor=${floor}&washer_number=${washer_number}`;
+  function goToTimer(washer_id) {
+    window.location.href = `/timer?washer_id=${washer_id}`;
   }
 
   function fetchDataFromServer() {

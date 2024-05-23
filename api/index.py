@@ -197,6 +197,7 @@ def submit_email():
         print(f"Error in submit_email: {e}")
         traceback.print_exc()
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 @app.route('/timer', methods=['GET', 'POST'])
 def timer():
     try:
@@ -225,11 +226,13 @@ def timer():
             dormitory = request.args.get('dormitory')
             floor = request.args.get('floor')
             washer_number = request.args.get('washer_number')
-            return render_template('timer.html', dormitory=dormitory, floor=floor, washer_id=washer_id)
+            washer_id = request.args.get('washer_id')  # 여기서 washer_id를 요청에서 받아옵니다.
+            return render_template('timer.html', washer_id=washer_id)
     except Exception as e:
         print(f"Error in timer route: {e}")
         traceback.print_exc()
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
