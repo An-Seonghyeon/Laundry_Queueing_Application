@@ -192,7 +192,6 @@
     background-color: #08B783;
     border: 0;
   }
-
 </style>
 </head>
 <body>
@@ -201,7 +200,7 @@
 <!-- First dropdown -->
 <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle full-width-button" id="dropdownMenuButton1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    {{ dormitory }}
+    {{dormitory}}
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" onclick="setSecondDropdownItems(event)">
     <li><a class="dropdown-item" href="#" data-id="b1">하용조관</a></li>
@@ -218,7 +217,7 @@
 <!-- Second dropdown -->
 <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle full-width-button" id="dropdownMenuButton2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    {{ floor }}
+    {{floor}}
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2" id="secondDropdownMenu" onclick="changeSecondButtonText(event)">
     <!-- Items dynamically generated here -->
@@ -244,9 +243,17 @@
 </div>
 
 <!-- Container to display washer information -->
-<div id="washer-container">
-    <div>세탁기 ID: {{ washer_id }}</div>
+<div id="washer-container"></div>
+
+<!-- Popup for email submission -->
+<div id="notification-popup" class="popup">
+  <span class="close-btn" onclick="hidePopup()">&times;</span>
+  <h2>알림설정</h2>
+  <p>종료 시간에 등록된 이메일로 알림을 전송합니다.</p>
+  <input type="email" id="email-input" placeholder="이메일 입력">
+  <button id="submit-btn">등록</button>
 </div>
+
 
 <!-- Email Modal -->
 <div class="modal fade" id="emailModal" tabindex="-1" aria-labelledby="emailModalLabel" aria-hidden="true">
@@ -257,16 +264,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="emailForm" action="/submit_email" method="post">
+        <form id="emailForm">
           <div class="mb-3">
             <label for="emailInput" class="form-label">이메일 주소</label>
-            <input type="email" class="form-control" id="emailInput" name="email" required>
+            <input type="email" class="form-control" id="emailInput" required>
           </div>
-          <input type="hidden" id="washerIdInput" name="washer_id">
-          <input type="hidden" id="dormitoryInput" name="dormitory">
-          <input type="hidden" id="floorInput" name="floor">
-          <input type="hidden" id="washerNumberInput" name="washer_number">
-          <input type="hidden" id="leftTimeInput" name="left_time">
           <button type="submit" class="btn btn-primary btn-submit">제출</button>
         </form>
       </div>
@@ -285,7 +287,8 @@
     document.getElementById('dropdownMenuButton2').innerText = newText;
     document.getElementById('dropdownMenuButton2').setAttribute('data-id', itemId);
     // Assuming you have a function to fetch data from the server based on the selected IDs
-    fetchDataAndUpdate();
+    fetchDataFromServer();
+    simulateDataFetchAndUpdate()
   }
 
   function setSecondDropdownItems(event) {
@@ -326,6 +329,7 @@
     });
   }
 
+
   function fetchDataAndUpdate() {
   // Get selected building and floor
     var bId = document.getElementById('dropdownMenuButton1').getAttribute('data-id');
@@ -343,29 +347,50 @@
         var washerItem = document.createElement('div');
         washerItem.className = 'time-item';
         washerItem.innerHTML = `
-        <div>${washer.number}번 세탁기<div class="wait">대기 인원: ${washer.waitingPeople}명</div></div>
-      <div class="time">${washer.endTime}</div>
-      <div class="icon"><span class="material-symbols-outlined notification-icon" data-washer="${washer.number}" data-bs-toggle="modal" data-bs-target="#emailModal">notifications</span></div>
-    `;
-        // Add event listener to the notification icon
-      var notificationIcon = washerItem.querySelector('.notification-icon');
-      notificationIcon.addEventListener('click', function() {
-        onclick="setMode('{{ reservation.data.washer_id }}')"; // Show popup when notification icon is clicked
-      });
-      document.getElementById('washer-container').appendChild(washerItem);
+          <div>${washer.number}번 세탁기 - 대기 인원: ${washer.waitingPeople}명</div>
+          <div class="time">${washer.endTime}</div>
+          <div class="icon"><span class="material-symbols-outlined">notifications</span></div>
+        `;
+        
+        document.getElementById('washer-container').appendChild(washerItem);
       });
     })
     .catch(error => console.error('Error fetching data:', error));
   }
 
-  function setMode(washer_id) {
-    document.getElementById('washerIdInput').value = washer_id;
-  }
+  // Simulated data for testing purposes
+var simulatedData = [
+  { number: "1", waitingPeople: 0, endTime: "00:00" },
+  { number: "2", waitingPeople: 0, endTime: "00:00" },
+  { number: "3", waitingPeople: 0, endTime: "00:00" },
+  { number: "4", waitingPeople: 0, endTime: "00:00" },
+  { number: "5", waitingPeople: 0, endTime: "00:00" },
+  { number: "6", waitingPeople: 0, endTime: "00:00" },
+  // Add more simulated data for additional washers if needed
+];
 
-  document.getElementById('emailForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    this.submit();
-  });
+// Function to simulate fetching data from Firebase based on selected building and floor
+function simulateDataFetchAndUpdate() {
+  // Clear previous washer information
+  document.getElementById('washer-container').innerHTML = '';
+
+  // Simulate fetching and updating data
+  simulatedData.forEach(washer => {
+    var washerItem = document.createElement('div');
+    washerItem.className = 'time-item';
+    washerItem.innerHTML = `
+      <div>${washer.number}번 세탁기<div class="wait">대기 인원: ${washer.waitingPeople}명</div></div>
+      <div class="time">${washer.endTime}</div>
+      <div class="icon"><span class="material-symbols-outlined notification-icon" data-washer="${washer.number}" data-bs-toggle="modal" data-bs-target="#emailModal">notifications</span></div>
+    `;
+      // Add event listener to the notification icon
+      var notificationIcon = washerItem.querySelector('.notification-icon');
+      notificationIcon.addEventListener('click', function() {
+        showPopup(washer.number); // Show popup when notification icon is clicked
+      });
+      document.getElementById('washer-container').appendChild(washerItem);
+    });
+  }
 
   function resetBackground() {
     document.body.style.backgroundColor = ''; // 배경색 원래대로 복구
@@ -376,6 +401,30 @@
     resetBackground();
   });
 
+
+  // Function to handle form submission
+  function handleSubmit() {
+    var emailInput = document.getElementById('email-input');
+    var email = emailInput.value.trim();
+    var washerNumber = document.getElementById('submit-btn').getAttribute('data-washer');
+    // Validate email address (you can add more validation if needed)
+    if (email !== '') {
+      // Here you can submit the email address to your backend or do any other action
+      console.log('Email submitted:', email);
+      hidePopup(); // Hide the popup after submission
+      // Change notification icon style
+      var notificationIcon = document.querySelector(`.notification-icon[data-washer="${washerNumber}"]`);
+      notificationIcon.classList.add('active');
+      emailInput.value = "";
+    } else {
+      alert('Please enter a valid email address.');
+    }
+  }
+
+  // Add event listener to the submit button
+  document.getElementById('submit-btn').addEventListener('click', handleSubmit);
+
+  simulateDataFetchAndUpdate();
 </script>
 
 </body>

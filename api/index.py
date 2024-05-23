@@ -75,10 +75,7 @@ def index():
                     else:
                         waiting_time = 0
 
-                    washer_list.append({
-                        'number':washer_num, 
-                        'waitingPeople': waiting_user, 
-                        'endTime': waiting_time})
+                    washer_list.append((washer_num, waiting_user, waiting_time))
             else:
                 washer_list = []
 
@@ -89,46 +86,7 @@ def index():
         print(f"Error in index route: {e}")
         traceback.print_exc()
         return jsonify({'status': 'error', 'message': str(e)}), 500
-    
-@app.route('/fetchDataFromFirebase', methods=['GET'])
-def fetch_data_from_firebase():
-    try:
-        dormitory = request.args.get('dormitory')
-        floor = request.args.get('floor')
 
-        if dormitory and floor:
-            floor = int(floor)
-            washer_info = get_washer_info(dormitory, floor)
-
-            washer_list = []
-            washer_nums = [res['data']['washer_number'] for res in washer_info]
-            unique_washer_nums = list(set(washer_nums))
-
-            for washer_num in unique_washer_nums:
-                waiting_user = sum(1 for res in washer_info if res['data']['washer_number'] == washer_num)
-                if waiting_user > 0:
-                    waiting_times = [res['data']['end_time'] for res in washer_info if res['data']['washer_number'] == washer_num]
-                    waiting_time = min(waiting_times)
-                else:
-                    waiting_time = 0
-
-                washer_list.append({
-                    'number': washer_num,
-                    'waitingPeople': waiting_user,
-                    'endTime': waiting_time
-                })
-
-            return jsonify(washer_list), 200
-        else:
-            return jsonify([]), 200
-        
-    except Exception as e:
-        print(f"Error in fetch_data_from_firebase: {e}")
-        
-        traceback.print_exc()
-        
-        return jsonify({'status': 'error', 'message': str(e)}), 500
-    
 @app.route('/option', methods=['GET', 'POST'])
 def option():
     try:
@@ -161,26 +119,36 @@ def option():
 def submit_email():
     try:
         data = request.form
+        user_email = data.get('email')
         washer_id = data.get('washer_id')
         dormitory = data.get('dormitory')
         floor = data.get('floor')
+        washer_number = data.get('washer_number')
+        mode = data.get('mode', None)
 
-        # Calculate the left_time based on mode (이 부분은 생략 가능)
+        # Calculate the left_time based on mode
         now = datetime.now()
-        left_time = now + timedelta(minutes=50)  # Example mode: standard
+        if mode == 'standard':
+            left_time = now + timedelta(minutes=50)
+        elif mode == 'powerful':
+            left_time = now + timedelta(minutes=60)
+        else:
+            return jsonify({'status': 'error', 'message': 'Invalid mode selected'}), 400
+
+        # Convert left_time to timestamp
         left_time_timestamp = left_time.timestamp()
 
         db.collection('waiting').add({
+            'user_email': user_email,
             'washer_id': washer_id,
             'left_time': left_time_timestamp,
         })
 
-        return render_template('index.html', dormitory=dormitory, floor=floor, washer_id=washer_id)
+        return render_template('index.html', dormitory=dormitory, floor=floor)
     except Exception as e:
         print(f"Error in submit_email: {e}")
         traceback.print_exc()
         return jsonify({'status': 'error', 'message': str(e)}), 500
-
 
 @app.route('/timer', methods=['GET', 'POST'])
 def timer():
