@@ -197,7 +197,7 @@
 <!-- First dropdown -->
 <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle full-width-button" id="dropdownMenuButton1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    {{dormitory}}
+    {{ dormitory }}
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" onclick="setSecondDropdownItems(event)">
     <li><a class="dropdown-item" href="#" data-id="b1">하용조관</a></li>
@@ -214,7 +214,7 @@
 <!-- Second dropdown -->
 <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle full-width-button" id="dropdownMenuButton2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    {{floor}}
+    {{ floor }}
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2" id="secondDropdownMenu" onclick="changeSecondButtonText(event)">
     <!-- Items dynamically generated here -->
@@ -240,15 +240,14 @@
 </div>
 
 <!-- Container to display washer information -->
-<div id="washer-container"></div>
-
-<!-- Popup for email submission -->
-<div id="notification-popup" class="popup">
-  <span class="close-btn" onclick="hidePopup()">&times;</span>
-  <h2>알림설정</h2>
-  <p>종료 시간에 등록된 이메일로 알림을 전송합니다.</p>
-  <input type="email" id="email-input" placeholder="이메일 입력">
-  <button id="submit-btn">등록</button>
+<div id="washer-container">
+  {% for washer in washer_list %}
+  <div class="time-item">
+    <div>{{ washer.number }}번 세탁기 - 대기 인원: {{ washer.waitingPeople }}명</div>
+    <div class="time">{{ washer.endTime }}</div>
+    <div class="icon"><span class="material-symbols-outlined notification-icon" data-washer="{{ washer.number }}" data-bs-toggle="modal" data-bs-target="#emailModal">notifications</span></div>
+  </div>
+  {% endfor %}
 </div>
 
 <!-- Email Modal -->
