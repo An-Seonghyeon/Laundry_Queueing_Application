@@ -76,7 +76,7 @@ def index():
                         waiting_time = 0
 
                     washer_list.append({
-                        'number':washer_num, 
+                        'number': washer_num, 
                         'waitingPeople': waiting_user, 
                         'endTime': waiting_time})
             else:
@@ -125,7 +125,7 @@ def fetch_data_from_firebase():
     except Exception as e:
         print(f"Error in fetch_data_from_firebase: {e}")
         traceback.print_exc()
-        
+
         return jsonify({'status': 'error', 'message': str(e)}), 500
     
 @app.route('/option', methods=['GET', 'POST'])
