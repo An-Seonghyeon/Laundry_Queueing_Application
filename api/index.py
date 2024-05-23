@@ -18,41 +18,79 @@ db = firestore.client()
 app = Flask(__name__, template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), '../templates'))
 
 def get_washer_info(dormitory, floor):
-    try:
-        floor_number = int(floor[1:])  # Extract the numeric part of the floor (e.g., 'f1' -> 1)
-        reservations = db.collection('reservations').where('dormitory', '==', dormitory).where('floor', '==', floor_number).order_by('washer_number').get()
-        reservation_list = [{'id': res.id, 'data': res.to_dict()} for res in reservations]
+    # Convert floor to the required format
+    floor_number = int(floor[1:])
+    
+    # Reference to the Firestore collections
+    washers_ref = db.collection('washers')
+    reservations_ref = db.collection('reservations')
+    waiting_ref = db.collection('waiting')
 
-        washers = {}
-        for res in reservation_list:
-            washer_number = res['data']['washer_number']
-            if washer_number not in washers:
-                washers[washer_number] = {
-                    'number': washer_number,
-                    'waitingPeople': 0,
-                    'endTime': None
-                }
-            washers[washer_number]['waitingPeople'] += 1
-            if not washers[washer_number]['endTime'] or res['data']['end_time'] < washers[washer_number]['endTime']:
-                washers[washer_number]['endTime'] = res['data']['end_time']
+    # Query washers for the given dormitory and floor
+    washers_query = washers_ref.where('dormitory', '==', dormitory).where('floor', '==', floor_number)
+    washers = washers_query.stream()
 
-        washer_info = list(washers.values())
+    washer_info = []
 
-        waiting_data = db.collection('waiting').where('washer_id', 'in', [f"{dormitory}_{floor_number}_{washer['number']}" for washer in washer_info]).get()
-        waiting_list = [{'id': wait.id, 'data': wait.to_dict()} for wait in waiting_data]
+    for washer in washers:
+        washer_data = washer.to_dict()
+        washer_id = washer_data['washer_id']
+        washer_number = washer_data['washer_number']
 
-        for wait in waiting_list:
-            washer_id = wait['data']['washer_id']
-            left_time = wait['data']['left_time']
-            for washer in washer_info:
-                if washer['number'] == washer_id.split('_')[-1]:  # assuming washer_id is formatted like dormitory_floor_washer_number
-                    washer['endTime'] = datetime.fromtimestamp(left_time).strftime('%H:%M:%S')
+        # Query reservations for the washer
+        reservation_query = reservations_ref.where('washer_id', '==', washer_id).stream()
+        reservation_data = next(reservation_query, None)
+        end_time = reservation_data.to_dict()['left_time'] if reservation_data else None
 
-        return washer_info
-    except Exception as e:
-        print(f"Error in get_washer_info: {e}")
-        traceback.print_exc()
-        return []
+        # Query waiting people for the washer
+        waiting_query = waiting_ref.where('washer_id', '==', washer_id).stream()
+        waiting_people = sum(1 for _ in waiting_query)
+
+        washer_info.append({
+            'washer_id': washer_id,
+            'number': washer_number,
+            'waitingPeople': waiting_people,
+            'endTime': end_time
+        })
+
+    return washer_info
+
+# def get_washer_info(dormitory, floor):
+#     try:
+#         floor_number = int(floor[1:])  # Extract the numeric part of the floor (e.g., 'f1' -> 1)
+#         reservations = db.collection('reservations').where('dormitory', '==', dormitory).where('floor', '==', floor_number).order_by('washer_number').get()
+#         reservation_list = [{'id': res.id, 'data': res.to_dict()} for res in reservations]
+
+#         washers = {}
+#         for res in reservation_list:
+#             washer_number = res['data']['washer_number']
+#             if washer_number not in washers:
+#                 washers[washer_number] = {
+#                     'number': washer_number,
+#                     'waitingPeople': 0,
+#                     'endTime': None
+#                 }
+#             washers[washer_number]['waitingPeople'] += 1
+#             if not washers[washer_number]['endTime'] or res['data']['end_time'] < washers[washer_number]['endTime']:
+#                 washers[washer_number]['endTime'] = res['data']['end_time']
+
+#         washer_info = list(washers.values())
+
+#         waiting_data = db.collection('waiting').where('washer_id', 'in', [f"{dormitory}_{floor_number}_{washer['number']}" for washer in washer_info]).get()
+#         waiting_list = [{'id': wait.id, 'data': wait.to_dict()} for wait in waiting_data]
+
+#         for wait in waiting_list:
+#             washer_id = wait['data']['washer_id']
+#             left_time = wait['data']['left_time']
+#             for washer in washer_info:
+#                 if washer['number'] == washer_id.split('_')[-1]:  # assuming washer_id is formatted like dormitory_floor_washer_number
+#                     washer['endTime'] = datetime.fromtimestamp(left_time).strftime('%H:%M:%S')
+
+#         return washer_info
+#     except Exception as e:
+#         print(f"Error in get_washer_info: {e}")
+#         traceback.print_exc()
+#         return []
 
 def reserve_idx():
     try:
@@ -108,8 +146,8 @@ def fetch_data_from_firebase():
 
         if dormitory and floor:
             washer_list = get_washer_info(dormitory, floor)
-            # return jsonify(washer_list), 200
-            return jsonify([{'number':1,'endTime':123,'waitingPeople':213}]), 200
+            return jsonify(washer_list), 200
+            # return jsonify([{'number':1,'endTime':123,'waitingPeople':213}]), 200
         else:
             return jsonify([]), 200
         
