@@ -122,36 +122,26 @@ def option():
 def submit_email():
     try:
         data = request.form
-        user_email = data.get('email')
         washer_id = data.get('washer_id')
         dormitory = data.get('dormitory')
         floor = data.get('floor')
-        washer_number = data.get('washer_number')
-        mode = data.get('mode', None)
 
-        # Calculate the left_time based on mode
+        # Calculate the left_time based on mode (이 부분은 생략 가능)
         now = datetime.now()
-        if mode == 'standard':
-            left_time = now + timedelta(minutes=50)
-        elif mode == 'powerful':
-            left_time = now + timedelta(minutes=60)
-        else:
-            return jsonify({'status': 'error', 'message': 'Invalid mode selected'}), 400
-
-        # Convert left_time to timestamp
+        left_time = now + timedelta(minutes=50)  # Example mode: standard
         left_time_timestamp = left_time.timestamp()
 
         db.collection('waiting').add({
-            'user_email': user_email,
             'washer_id': washer_id,
             'left_time': left_time_timestamp,
         })
 
-        return render_template('index.html', dormitory=dormitory, floor=floor)
+        return render_template('index.html', dormitory=dormitory, floor=floor, washer_id=washer_id)
     except Exception as e:
         print(f"Error in submit_email: {e}")
         traceback.print_exc()
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 @app.route('/timer', methods=['GET', 'POST'])
 def timer():
