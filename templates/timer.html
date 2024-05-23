@@ -101,41 +101,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-let hours = 0;
-let minutes = 0;
-let seconds = 0;
 
-let displayHours = 0;
-let displayMinutes = 0;
-let displaySeconds = 0;
-
-let interval = null;
-
-function countdown() {
-    if (seconds === 0 && minutes === 0 && hours === 0) {
-        clearInterval(interval);
-    } else {
-        if (seconds === 0) {
-            seconds = 59;
-            if (minutes === 0) {
-                minutes = 59;
-                if (hours > 0) {
-                    hours--;
-                }
-            } else {
-                minutes--;
-            }
-        } else {
-            seconds--;
-        }
-    }
-
-    displaySeconds = seconds < 10 ? "0" + seconds.toString() : seconds;
-    displayMinutes = minutes < 10 ? "0" + minutes.toString() : minutes;
-    displayHours = hours < 10 ? "0" + hours.toString() : hours;
-
-    document.getElementById("timer").value = displayHours + ":" + displayMinutes + ":" + displaySeconds;
-}
 
 function startCountdown() {
     const timeParts = document.getElementById("timer").value.split(":");
@@ -160,11 +126,7 @@ function startCountdown() {
 }
 
 function cancelCountdown() {
-    clearInterval(interval);
-    document.getElementById("timer").value = "00:00:00";
-    hours = 0;
-    minutes = 0;
-    seconds = 0;
+    window.history.back();
 }
 
 function makeEditable(timerElement) {
