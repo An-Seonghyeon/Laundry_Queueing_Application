@@ -213,7 +213,7 @@ def timer():
             floor = request.args.get('floor')
             washer_number = request.args.get('washer_number')
             washer_id = request.args.get('washer_id')  # 여기서 washer_id를 요청에서 받아옵니다.
-            return render_template('timer.html', washer_id=washer_id)
+            return render_template('timer.html', washer_id=washer_id,  dormitory=dormitory, floor=floor)
     except Exception as e:
         print(f"Error in timer route: {e}")
         traceback.print_exc()

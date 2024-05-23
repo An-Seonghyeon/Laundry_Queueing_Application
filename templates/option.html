@@ -1,3 +1,4 @@
+<!-- option.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,7 +68,7 @@
 <div class="box">
   <div class="menu-item" data-bs-toggle="modal" data-bs-target="#emailModal" onclick="setMode('standard', '{{ reservation.data.washer_id }}', '{{ reservation.data.dormitory }}', '{{ floor }}', '{{ washer_number }}', 50)">표준 - Standard</div>
   <div class="menu-item" data-bs-toggle="modal" data-bs-target="#emailModal" onclick="setMode('powerful', '{{ reservation.data.washer_id }}', '{{ reservation.data.dormitory }}', '{{ floor }}', '{{ washer_number }}', 60)">강력 - Powerful</div>
-  <div class="menu-item" onclick="goToTimer('{{ reservation.data.washer_id }}')">기타 - Others</div>
+  <div class="menu-item" onclick="goToTimer('{{ reservation.data.washer_id }}', '{{ reservation.data.dormitory }}', '{{ floor }}')">기타 - Others</div>
 </div>
 
 <!-- Email Modal -->
@@ -126,8 +127,8 @@
     resetBackground();
   });
 
-  function goToTimer(washer_id) {
-    window.location.href = `/timer?washer_id=${washer_id}`;
+  function goToTimer(washer_id, dormitory, floor) {
+    window.location.href = `/timer?washer_id=${washer_id}&dormitory=${dormitory}&floor=${floor}`;
   }
 
   function fetchDataFromServer() {
