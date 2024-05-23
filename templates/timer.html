@@ -58,7 +58,7 @@
 <div class="container">
 <div class="time_container">
     <h1>시간 입력</h1>
-    <form id="timerForm" action="/timer" method="post">
+    <form id="timerForm">
         <input type="hidden" name="dormitory" value="{{ dormitory }}">
         <input type="hidden" name="floor" value="{{ floor }}">
         <input type="hidden" name="washer_number" value="{{ washer_number }}">
@@ -132,8 +132,13 @@ function showEmailModal() {
 
 document.getElementById('emailForm').addEventListener('submit', function(event) {
     event.preventDefault();
-    const minutes = parseInt(document.getElementById("timer").value) || 0;
-    document.getElementById('endTimeInput').value = isNaN(minutes) ? 0 : minutes;
+
+    // Set hidden input values
+    document.getElementById('dormitoryInput').value = document.querySelector('input[name="dormitory"]').value;
+    document.getElementById('floorInput').value = document.querySelector('input[name="floor"]').value;
+    document.getElementById('washerNumberInput').value = document.querySelector('input[name="washer_number"]').value;
+    document.getElementById('endTimeInput').value = document.getElementById('timer').value;
+
     this.submit();
 });
 </script>

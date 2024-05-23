@@ -167,17 +167,21 @@ def submit_email():
         washer_number = data.get('washer_number')
         mode = data.get('mode', None)
         end_time = data.get('end_time', None)
-        # Calculate the left_time based on mode
+
+        # Calculate the left_time based on mode or end_time
         now = datetime.now()
         if mode == 'standard':
             left_time = now + timedelta(minutes=50)
         elif mode == 'powerful':
             left_time = now + timedelta(minutes=60)
         elif end_time:
-            end_time_parts = list(map(int, end_time.split(':')))
-            left_time = now + timedelta(hours=end_time_parts[0], minutes=end_time_parts[1], seconds=end_time_parts[2])
+            try:
+                end_time_minutes = int(end_time)
+                left_time = now + timedelta(minutes=end_time_minutes)
+            except ValueError as ve:
+                return jsonify({'status': 'error', 'message': f'Invalid end_time format: {ve}'}), 400
         else:
-            return jsonify({'status': 'error', 'message': 'Invalid mode selected'}), 400
+            return jsonify({'status': 'error', 'message': 'Invalid mode or end_time selected'}), 400
 
         # Convert left_time to timestamp
         left_time_timestamp = left_time.timestamp()
@@ -193,7 +197,6 @@ def submit_email():
         print(f"Error in submit_email: {e}")
         traceback.print_exc()
         return jsonify({'status': 'error', 'message': str(e)}), 500
-
 @app.route('/timer', methods=['GET', 'POST'])
 def timer():
     try:
