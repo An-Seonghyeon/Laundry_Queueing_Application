@@ -264,7 +264,7 @@
             <label for="emailInput" class="form-label">이메일 주소</label>
             <input type="email" class="form-control" id="emailInput" required>
           </div>
-          <button type="submit" class="btn btn-primary btn-submit">제출</button>
+          <button type="submit" class="btn btn-primary btn-submit" id="submit-btn">제출</button>
         </form>
       </div>
     </div>
@@ -354,7 +354,8 @@
     emailModal.show();
   }
 
-  function handleSubmit() {
+  function handleSubmit(event) {
+    event.preventDefault();
     var emailInput = document.getElementById('emailInput');
     var email = emailInput.value.trim();
     var washerNumber = document.getElementById('submit-btn').getAttribute('data-washer');
@@ -365,7 +366,7 @@
       var notificationIcon = document.querySelector(`.notification-icon[data-washer="${washerNumber}"]`);
       notificationIcon.classList.add('active');
 
-      var emailModal = new bootstrap.Modal(document.getElementById('emailModal'));
+      var emailModal = bootstrap.Modal.getInstance(document.getElementById('emailModal'));
       emailModal.hide();
 
       emailInput.value = "";
@@ -374,7 +375,7 @@
     }
   }
 
-  document.getElementById('submit-btn').addEventListener('click', handleSubmit);
+  document.getElementById('emailForm').addEventListener('submit', handleSubmit);
 
   fetchDataAndUpdate();
 </script>
