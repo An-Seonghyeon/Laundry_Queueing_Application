@@ -328,6 +328,10 @@
     });
   }
 
+  function resetBackground() {
+    document.body.style.backgroundColor = ''; // 배경색 원래대로 복구
+  }
+
   function showPopup(washerNumber) {
     var submitBtn = document.getElementById('submit-btn');
     submitBtn.setAttribute('data-washer', washerNumber);
@@ -483,7 +487,13 @@
         .catch(error => console.error('Error fetching waiting data:', error));
 }
 
-document.getElementById('emailForm').addEventListener('submit', handleSubmit);
+//document.getElementById('emailForm').addEventListener('submit', handleSubmit);
+
+var em = document.getElementById('emailForm');
+em.addEventListener('submit', function() {
+  handleSubmit
+  resetBackground();
+});
 
 populateWashers();
 </script>
