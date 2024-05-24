@@ -356,24 +356,43 @@
   }
 
   function handleSubmit(event) {
-    event.preventDefault();
-    var emailInput = document.getElementById('emailInput');
-    var email = emailInput.value.trim();
-    var washerNumber = document.getElementById('submit-btn').getAttribute('data-washer');
+      event.preventDefault();
+      var emailInput = document.getElementById('emailInput');
+      var email = emailInput.value.trim();
+      var washerNumber = document.getElementById('submit-btn').getAttribute('data-washer');
+      var dormitory = document.getElementById('dropdownMenuButton1').innerText.trim();
+      var floorText = document.getElementById('dropdownMenuButton2').innerText.trim();
+      var floor = floorText.match(/\d+/)[0];
+      var washer_id = `${dormitory}_${floor}_${washerNumber}`;
 
-    if (email !== '') {
-      console.log('Email submitted:', email);
+      if (email !== '') {
+          console.log('Email submitted:', email);
 
-      var notificationIcon = document.querySelector(`.notification-icon[data-washer="${washerNumber}"]`);
-      notificationIcon.classList.add('active');
+          var notificationIcon = document.querySelector(`.notification-icon[data-washer="${washer_id}"]`);
 
-      var emailModal = bootstrap.Modal.getInstance(document.getElementById('emailModal'));
-      emailModal.hide();
-
-      emailInput.value = "";
-    } else {
-      alert('Please enter a valid email address.');
-    }
+          fetch('/addNotificationEmail', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  email: email,
+                  washer_id: washer_id
+              }),
+          })
+          .then(response => response.json())
+          .then(data => {
+              console.log('Success:', data);
+              var emailModal = bootstrap.Modal.getInstance(document.getElementById('emailModal'));
+              emailModal.hide();
+              emailInput.value = "";
+          })
+          .catch((error) => {
+              console.error('Error:', error);
+          });
+      } else {
+          alert('Please enter a valid email address.');
+      }
   }
 
   function populateWashers() {

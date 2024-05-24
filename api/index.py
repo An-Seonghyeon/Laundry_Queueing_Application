@@ -243,6 +243,35 @@ def timer():
         print(f"Error in timer route: {e}")
         traceback.print_exc()
         return jsonify({'status': 'error', 'message': str(e)}), 500
+    
+
+@app.route('/addNotificationEmail', methods=['POST'])
+def add_notification_email():
+    try:
+        data = request.json
+        email = data.get('email')
+        washer_id = data.get('washer_id')
+
+        if not email or not washer_id:
+            return jsonify({'status': 'error', 'message': 'Email and Washer ID are required'}), 400
+
+        # `notify` 서브컬렉션에 이메일 추가
+        waiting_docs = db.collection('waiting').where('washer_id', '==', washer_id).get()
+        if not waiting_docs:
+            return jsonify({'status': 'error', 'message': 'No matching washer ID found'}), 404
+
+        for doc in waiting_docs:
+            doc.reference.collection('notify').add({
+                'email': email
+            })
+
+        return jsonify({'status': 'success', 'message': 'Email added to notifications'}), 200
+    except Exception as e:
+        print(f"Error in add_notification_email: {e}")
+        traceback.print_exc()
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
 
 
 if __name__ == '__main__':
