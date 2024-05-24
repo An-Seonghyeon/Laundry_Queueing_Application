@@ -95,24 +95,46 @@ def index():
         traceback.print_exc()
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
-
-@app.route('/fetchDataFromFirebase', methods=['GET'])
-def fetch_data_from_firebase():
+@app.route('/fetchWaitingData', methods=['GET'])
+def fetch_waiting_data():
     try:
-        dormitory = request.args.get('dormitory')
-        floor = request.args.get('floor')
+        dormitory_floor = request.args.get('dormitoryFloor')
+        if not dormitory_floor:
+            return jsonify({'status': 'error', 'message': 'dormitoryFloor is required'}), 400
 
-        if dormitory and floor:
-            washer_list = get_washer_info(dormitory, floor)
-            return jsonify(washer_list), 200
-        else:
-            return jsonify([]), 200
-        
+        print(f"Querying for dormitory_floor: {dormitory_floor}")
+
+        # Quering Firestore with modified condition
+        waiting_data = db.collection('waiting').where('washer_id', '>=', dormitory_floor + '_').where('washer_id', '<=', dormitory_floor + '_\uf8ff').get()
+
+        waiting_list = [wait.to_dict() for wait in waiting_data]
+
+        # Print the results to console
+        print("Retrieved waiting_list: ", waiting_list)
+
+        return jsonify(waiting_list), 200
     except Exception as e:
-        print(f"Error in fetch_data_from_firebase: {e}")
+        print(f"Error in fetch_waiting_data: {e}")
         traceback.print_exc()
-
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
+# @app.route('/fetchDataFromFirebase', methods=['GET'])
+# def fetch_data_from_firebase():
+#     try:
+#         dormitory = request.args.get('dormitory')
+#         floor = request.args.get('floor')
+
+#         if dormitory and floor:
+#             washer_list = get_washer_info(dormitory, floor)
+#             return jsonify(washer_list), 200
+#         else:
+#             return jsonify([]), 200
+        
+#     except Exception as e:
+#         print(f"Error in fetch_data_from_firebase: {e}")
+#         traceback.print_exc()
+
+#         return jsonify({'status': 'error', 'message': str(e)}), 500
     
 @app.route('/option', methods=['GET', 'POST'])
 def option():
