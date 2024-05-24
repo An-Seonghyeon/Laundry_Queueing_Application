@@ -329,7 +329,12 @@
   }
 
   function resetBackground() {
-    document.body.style.backgroundColor = ''; // 배경색 원래대로 복구
+    document.body.classList.remove('modal-open');
+    var backdrop = document.querySelector('.modal-backdrop');
+    
+    if (backdrop) {
+      backdrop.remove();
+    }
   }
   
   document.addEventListener('DOMContentLoaded', function() {
