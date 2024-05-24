@@ -190,6 +190,10 @@
     background-color: #08B783;
     border: 0;
   }
+  .waiting-people {
+    color: gray;
+    font-size: 10px;
+  }
 </style>
 </head>
 <body>
@@ -318,6 +322,35 @@
       dropdownMenu.innerHTML += `<li><a class="dropdown-item" href="#" data-id="f${item}">${item}층</a></li>`;
     });
   }
+
+  // function fetchDataAndUpdate() {
+  //   var bId = document.getElementById('dropdownMenuButton1').getAttribute('data-id');
+  //   var floorId = document.getElementById('dropdownMenuButton2').getAttribute('data-id');
+
+  //   fetch(`/fetchDataFromFirebase?dormitory=${bId}&floor=${floorId}`)
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       document.getElementById('washer-container').innerHTML = '';
+
+  //       data.forEach(washer => {
+  //         var washerItem = document.createElement('div');
+  //         washerItem.className = 'time-item';
+  //         washerItem.innerHTML = `
+  //           <div>${washer.number}번 세탁기 - 대기 인원: ${washer.waitingPeople}명</div>
+  //           <div class="time">${washer.endTime}</div>
+  //           <div class="icon"><span class="material-symbols-outlined notification-icon" data-washer="${washer.number}" data-bs-toggle="modal" data-bs-target="#emailModal">notifications</span></div>
+  //         `;
+
+  //         var notificationIcon = washerItem.querySelector('.notification-icon');
+  //         notificationIcon.addEventListener('click', function() {
+  //           showPopup(washer.number);
+  //         });
+
+  //         document.getElementById('washer-container').appendChild(washerItem);
+  //       });
+  //     })
+  //     .catch(error => console.error('Error fetching data:', error));
+  // }
 
   function showPopup(washerNumber) {
     var submitBtn = document.getElementById('submit-btn');
@@ -450,10 +483,7 @@
                 }
 
                 washerItem.innerHTML = `
-                    <div>
-                      ${washerNumber}번 세탁기
-                      <div class = "waiting-people">0명</div>
-                    </div>
+                    <div>${washerNumber}번 세탁기 <span class="waiting-people"></span></div>
                     <div class="time">${waitingInfo}</div>
                     <div class="icon">${notificationIconHTML}</div>
                 `;
@@ -467,7 +497,7 @@
 
                 container.appendChild(washerItem);
             }
-
+              
             updateTimes();
             setInterval(updateTimes, 1000);
         })
