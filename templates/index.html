@@ -240,7 +240,8 @@
 </div>
 
 <!-- Container to display washer information -->
-<div id="washer-container">
+<div id="washer-container"></div>
+<!-- <div id="washer-container">
   {% for washer in washer_list %}
   <div class="time-item">
     <div>{{ washer.number }}번 세탁기 - 대기 인원: {{ washer.waitingPeople }}명</div>
@@ -248,7 +249,7 @@
     <div class="icon"><span class="material-symbols-outlined notification-icon" data-washer="{{ washer.number }}" data-bs-toggle="modal" data-bs-target="#emailModal">notifications</span></div>
   </div>
   {% endfor %}
-</div>
+</div> -->
 
 <!-- Email Modal -->
 <div class="modal fade" id="emailModal" tabindex="-1" aria-labelledby="emailModalLabel" aria-hidden="true">
