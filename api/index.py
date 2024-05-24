@@ -229,6 +229,27 @@ def submit_email():
         traceback.print_exc()
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+@app.route('/submit_email_2', methods=['POST'])
+def submit_email_2():
+    try:
+        data = request.form
+        user_email = data.get('email')
+        washer_id = data.get('washer_id')
+
+        # Extract dormitory and floor from washer_id
+        parts = washer_id.split('_')
+        dormitory = parts[0]
+        floor = f'f{parts[1]}'  # Assuming floor is represented as 'f7' for floor 7
+
+        db.collection('waiting').add({
+            'user_email': user_email,
+            'washer_id': washer_id,
+        })
+
+        return render_template('index.html', dormitory=dormitory, floor=floor)
+    except Exception as e:
+        return str(e), 400
+
 @app.route('/timer', methods=['GET', 'POST'])
 def timer():
     try:
