@@ -409,7 +409,7 @@
     fetch(`/fetchWaitingData?dormitoryFloor=${dormitoryFloor}`)
         .then(response => response.json())
         .then(data => {
-            console.log("Received data: ", data);  // 콘솔에 waiting_list 출력
+            console.log("Received data: ", data);
 
             const waitingData = {};
             data.forEach(doc => {
@@ -420,8 +420,8 @@
             });
 
             function updateTimes() {
-                const currentTime = Date.now() / 1000; // 현재 시간을 초 단위로
-                
+                const currentTime = Date.now() / 1000;
+
                 for (let i = 0; i < 6; i++) {
                     const washerNumber = (i + 1).toString();
                     const washerItem = document.querySelector(`.time-item[data-washer="${washerNumber}"] .time`);
@@ -430,7 +430,7 @@
                         let waitingInfo = "사용가능";
                         if (waitingData[washerNumber]) {
                             const leftTime = waitingData[washerNumber].left_time;
-                            const remainingTime = leftTime - currentTime; // 남은 시간 계산
+                            const remainingTime = leftTime - currentTime;
 
                             if (remainingTime > 0) {
                                 const remainingHours = Math.floor(remainingTime / 3600).toString().padStart(2, '0');
@@ -444,53 +444,62 @@
             }
 
             for (let i = 0; i < 6; i++) {
-              const washerNumber = (i + 1).toString();
-              const washerItem = document.createElement('div');
-              washerItem.className = 'time-item';
-              washerItem.setAttribute('data-washer', washerNumber);
+                const washerNumber = (i + 1).toString();
+                const washerItem = document.createElement('div');
+                washerItem.className = 'time-item';
+                washerItem.setAttribute('data-washer', washerNumber);
 
-              let waitingInfo = "사용가능";
-              let notificationIconHTML = `<div class="icon"><span class="material-symbols-outlined notification-icon" data-washer="${washerNumber}" data-bs-toggle="modal" data-bs-target="#emailModal">notifications</span></div>`;
-              
-              if (waitingData[washerNumber]) {
-                  const leftTime = waitingData[washerNumber].left_time;
-                  const leftTimeDate = new Date(leftTime * 1000); // Convert timestamp to Date
-                  const currentTime = Date.now() / 1000; // 현재 시간을 초 단위로
-                  const remainingTime = leftTime - currentTime; // 남은 시간 계산
+                let waitingInfo = "사용가능";
+                let notificationIconHTML = `<div class="icon"><span class="material-symbols-outlined notification-icon" data-washer="${washerNumber}" data-bs-toggle="modal" data-bs-target="#emailModal">notifications</span></div>`;
 
-                  if (remainingTime > 0) {
-                      const remainingHours = Math.floor(remainingTime / 3600).toString().padStart(2, '0');
-                      const remainingMinutes = Math.floor((remainingTime % 3600) / 60).toString().padStart(2, '0');
-                      waitingInfo = `${remainingHours}:${remainingMinutes}`;
-                  }
-              }
+                if (waitingData[washerNumber]) {
+                    const leftTime = waitingData[washerNumber].left_time;
+                    const leftTimeDate = new Date(leftTime * 1000);
+                    const currentTime = Date.now() / 1000;
+                    const remainingTime = leftTime - currentTime;
 
-              if (waitingInfo === "사용가능") {
-                  notificationIconHTML = ''; // Hide notification icon if washer is available
-              }
+                    if (remainingTime > 0) {
+                        const remainingHours = Math.floor(remainingTime / 3600).toString().padStart(2, '0');
+                        const remainingMinutes = Math.floor((remainingTime % 3600) / 60).toString().padStart(2, '0');
+                        waitingInfo = `${remainingHours}:${remainingMinutes}`;
+                    }
 
-              washerItem.innerHTML = `
-                  <div>${washerNumber}번 세탁기 - 대기 인원: 0명</div>
-                  <div class="time">${waitingInfo}</div>
-                  <div class="icon">${notificationIconHTML}</div>
-              `;
+                    fetch(`/fetchNotificationCount?washerId=${waitingData[washerNumber].washer_id}`)
+                        .then(response => response.json())
+                        .then(countData => {
+                            const waitingPeopleCount = countData.count;
+                            console.log(`waitingPeopleCount: ${waitingPeopleCount}`);
+                            washerItem.querySelector('.waiting-people').innerText = `${waitingPeopleCount}명`;
+                        })
+                        .catch(error => console.error('Error fetching notification count:', error));
+                }
 
-              const notificationIcon = washerItem.querySelector('.notification-icon');
-              if (notificationIcon) {
-                  notificationIcon.addEventListener('click', function() {
-                      showPopup(washerNumber);
-                  });
-              }
+                if (waitingInfo === "사용가능") {
+                    notificationIconHTML = ''; // Hide notification icon if washer is available
+                }
 
-              container.appendChild(washerItem);
-          }
+                washerItem.innerHTML = `
+                    <div>${washerNumber}번 세탁기 - 대기 인원: <span class="waiting-people">0명</span></div>
+                    <div class="time">${waitingInfo}</div>
+                    <div class="icon">${notificationIconHTML}</div>
+                `;
 
-            // 초기화 후 1초마다 남은 시간을 업데이트합니다.
+                const notificationIcon = washerItem.querySelector('.notification-icon');
+                if (notificationIcon) {
+                    notificationIcon.addEventListener('click', function() {
+                        showPopup(washerNumber);
+                    });
+                }
+
+                container.appendChild(washerItem);
+            }
+
             updateTimes();
             setInterval(updateTimes, 1000);
         })
         .catch(error => console.error('Error fetching waiting data:', error));
 }
+
 
 document.getElementById('emailForm').addEventListener('submit', handleSubmit);
   // fetchDataAndUpdate();

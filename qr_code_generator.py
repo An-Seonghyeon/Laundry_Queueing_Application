@@ -1,10 +1,10 @@
 import qrcode
 
 # washer_id 예시 (실제 데이터로 대체 필요)
-washer_id = 'b2_1_1'
+washer_id = '하용조관_7_2'
 
 # URL of the webpage
-url = f"https://laundryqueueingapp-22100275-handongack-sanghoonparks-projects.vercel.app/option?washer_id={washer_id}"
+url = f"laundry-queueing-application-dun.vercel.app/option?washer_id={washer_id}"
 
 # Generate QR code
 qr = qrcode.QRCode(

@@ -33,7 +33,10 @@ def get_washer_info(dormitory, floor):
                     'waitingPeople': 0,
                     'endTime': None
                 }
-            washers[washer_id]['waitingPeople'] += 1
+            
+            # Get the number of documents in the notify sub-collection
+            notify_docs = db.collection('waiting').document(res.id).collection('notify').get()
+            washers[washer_id]['waitingPeople'] = len(notify_docs)
 
         waiting_data = db.collection('waiting').where('washer_id', 'in', list(washers.keys())).get()
         waiting_list = [{'id': wait.id, 'data': wait.to_dict()} for wait in waiting_data]
@@ -50,6 +53,28 @@ def get_washer_info(dormitory, floor):
         print(f"Error in get_washer_info: {e}")
         traceback.print_exc()
         return []
+    
+@app.route('/fetchNotificationCount', methods=['GET'])
+def fetch_notification_count():
+    try:
+        washer_id = request.args.get('washerId')
+        if not washer_id:
+            return jsonify({'status': 'error', 'message': 'Washer ID is required'}), 400
+
+        waiting_docs = db.collection('waiting').where('washer_id', '==', washer_id).get()
+        if not waiting_docs:
+            return jsonify({'status': 'error', 'message': 'No matching washer ID found'}), 404
+
+        count = 0
+        for doc in waiting_docs:
+            notify_docs = doc.reference.collection('notify').get()
+            count += len(notify_docs)
+
+        return jsonify({'status': 'success', 'count': count}), 200
+    except Exception as e:
+        print(f"Error in fetch_notification_count: {e}")
+        traceback.print_exc()
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 def reserve_idx():
     try:
