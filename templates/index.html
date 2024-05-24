@@ -408,7 +408,7 @@
                     const washerItem = document.querySelector(`.time-item[data-washer="${washerNumber}"] .time`);
 
                     if (washerItem) {
-                        let waitingInfo = "00:00";
+                        let waitingInfo = "사용가능";
                         if (waitingData[washerNumber]) {
                             const leftTime = waitingData[washerNumber].left_time;
                             const remainingTime = leftTime - currentTime; // 남은 시간 계산
