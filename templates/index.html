@@ -331,6 +331,11 @@
   function resetBackground() {
     document.body.style.backgroundColor = ''; // 배경색 원래대로 복구
   }
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    var emailForm = document.getElementById('emailForm');
+    emailForm.addEventListener('submit', handleSubmit);
+  });
 
   function showPopup(washerNumber) {
     var submitBtn = document.getElementById('submit-btn');
@@ -370,6 +375,7 @@
               var emailModal = bootstrap.Modal.getInstance(document.getElementById('emailModal'));
               emailModal.hide();
               emailInput.value = "";
+              resetBackground();
           })
           .catch((error) => {
               console.error('Error:', error);
@@ -487,7 +493,7 @@
         .catch(error => console.error('Error fetching waiting data:', error));
 }
 
-document.getElementById('emailForm').addEventListener('submit', handleSubmit);
+//document.getElementById('emailForm').addEventListener('submit', handleSubmit);
 
 populateWashers();
 </script>
