@@ -483,6 +483,10 @@
         .catch(error => console.error('Error fetching waiting data:', error));
 }
 
+  document.getElementById('emailForm').addEventListener('submit', function() {
+    this.submit();
+  });
+
 populateWashers();
 </script>
 
