@@ -326,17 +326,22 @@
       var secondDropdownButton = document.getElementById('dropdownMenuButton2');
 
       // Set the first dropdown
+      var firstDropdownItems = document.querySelectorAll('#firstDropdownMenu .dropdown-item');
+      firstDropdownItems.forEach(item => {
+        if (item.getAttribute('data-id') === dormitory) {
+          firstDropdownButton.innerText = item.textContent;
+        }
+      });
       firstDropdownButton.setAttribute('data-id', dormitory);
-      document.getElementById('dropdownMenuButton1').setAttribute('data-id', selectedBId);
-      var newText = event.target.textContent;
-      document.getElementById('dropdownMenuButton1').innerText = newText;
-
+      
       // Trigger setting second dropdown items
       setSecondDropdownItems({ target: { getAttribute: () => dormitory, textContent: dormitory.charAt(0).toUpperCase() + dormitory.slice(1) } });
 
       // Set the second dropdown
       secondDropdownButton.innerText = floor.slice(1) + '층';
       secondDropdownButton.setAttribute('data-id', floor);
+
+      fetchDataAndUpdate();
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -346,7 +351,6 @@
 
       // Set the dropdown values based on these variables
       setDropdownValues(dormitory, floor);
-      fetchDataAndUpdate();
     });
 
 
