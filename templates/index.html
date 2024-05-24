@@ -199,7 +199,7 @@
   <button class="btn btn-secondary dropdown-toggle full-width-button" id="dropdownMenuButton1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
     {{ dormitory }}
   </button>
-  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" onclick="setSecondDropdownItems(event)">
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="firstDropdownMenu" onclick="setSecondDropdownItems(event)">
     <li><a class="dropdown-item" href="#" data-id="hayongjo">하용조관</a></li>
     <li><a class="dropdown-item" href="#" data-id="vision">비전관</a></li>
     <li><a class="dropdown-item" href="#" data-id="bethel">벧엘관</a></li>
@@ -326,11 +326,13 @@
       var secondDropdownButton = document.getElementById('dropdownMenuButton2');
 
       // Set the first dropdown
+      
       var firstDropdownItems = document.querySelectorAll('#firstDropdownMenu .dropdown-item');
       firstDropdownItems.forEach(item => {
         if (item.getAttribute('data-id') === dormitory) {
           firstDropdownButton.innerText = item.textContent;
         }
+        
       });
       firstDropdownButton.setAttribute('data-id', dormitory);
       
