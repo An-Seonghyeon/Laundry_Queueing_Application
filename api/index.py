@@ -305,10 +305,18 @@ def check_and_delete_expired_documents():
         for doc in waiting_docs:
             left_time = doc.to_dict().get('left_time')
             if left_time and left_time < now:
-                db.collection('waiting').document(doc.id).delete()
+                delete_document_with_subcollections(doc.reference)
                 print(f"Document {doc.id} successfully deleted!")
         
         time.sleep(60)  # 5분마다 한 번씩 실행
+
+def delete_document_with_subcollections(doc_ref):
+    subcollections = doc_ref.collections()
+    for subcollection in subcollections:
+        docs = subcollection.stream()
+        for doc in docs:
+            delete_document_with_subcollections(doc.reference)
+    doc_ref.delete()
 
 # 백그라운드 스레드에서 check_and_delete_expired_documents 함수 실행
 thread = threading.Thread(target=check_and_delete_expired_documents)
