@@ -192,7 +192,7 @@
   }
   .waiting-people {
     color: gray;
-    font-size: 8px;
+    font-size: 11px;
   }
 </style>
 </head>
@@ -323,6 +323,12 @@
     });
   }
 
+  document.addEventListener('DOMContentLoaded', function() {
+    var submitBtn = document.getElementById('submit-btn');
+    
+    submitBtn.addEventListener('click', handleSubmit);
+  });
+
   function showPopup(washerNumber) {
     var submitBtn = document.getElementById('submit-btn');
     submitBtn.setAttribute('data-washer', washerNumber);
@@ -450,7 +456,7 @@
                 }
 
                 if (waitingInfo === "사용가능") {
-                    notificationIconHTML = ''; // Hide notification icon if washer is available
+                    notificationIconHTML = '';
                 }
 
                 washerItem.innerHTML = `
