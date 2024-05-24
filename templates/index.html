@@ -260,12 +260,13 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="emailForm">
+        <form id="emailForm" action="/submit_email" method="post">
           <div class="mb-3">
             <label for="emailInput" class="form-label">이메일 주소</label>
-            <input type="email" class="form-control" id="emailInput" required>
+            <input type="email" class="form-control" id="emailInput" name="email" required>
           </div>
-          <button type="submit" class="btn btn-primary btn-submit" id="submit-btn">제출</button>
+          <input type="hidden" id="washerIdInput" name="washer_id">
+          <button type="submit" class="btn btn-primary btn-submit">제출</button>
         </form>
       </div>
     </div>
@@ -332,9 +333,9 @@
           var washerItem = document.createElement('div');
           washerItem.className = 'time-item';
           washerItem.innerHTML = `
-            <div>${washer.number}번 세탁기 - 대기 인원: ${washer.waitingPeople}명</div>
+            <div>${washer.number}번 세탁기<div class="wait">대기 인원: ${washer.waitingPeople}명</div></div>
             <div class="time">${washer.endTime}</div>
-            <div class="icon"><span class="material-symbols-outlined notification-icon" data-washer="${washer.number}" data-bs-toggle="modal" data-bs-target="#emailModal">notifications</span></div>
+            <div class="icon"><span class="material-symbols-outlined notification-icon" data-washer="${washer.washer_id}" data-bs-toggle="modal" data-bs-target="#emailModal" onclick="setID(this)">notifications</span></div>
           `;
 
           var notificationIcon = washerItem.querySelector('.notification-icon');
@@ -348,35 +349,28 @@
       .catch(error => console.error('Error fetching data:', error));
   }
 
-  function showPopup(washerNumber) {
-    var submitBtn = document.getElementById('submit-btn');
-    submitBtn.setAttribute('data-washer', washerNumber);
-    var emailModal = new bootstrap.Modal(document.getElementById('emailModal'));
-    emailModal.show();
+  function setID(element) {
+    // Get the data-washer attribute from the clicked element
+    const washerId = element.getAttribute('data-washer');
+    
+    // Set the value to the hidden input field in the modal form
+    document.getElementById('washerIdInput').value = washerId;
   }
 
-  function handleSubmit(event) {
+  document.getElementById('emailForm').addEventListener('submit', function(event) {
     event.preventDefault();
-    var emailInput = document.getElementById('emailInput');
-    var email = emailInput.value.trim();
-    var washerNumber = document.getElementById('submit-btn').getAttribute('data-washer');
+    this.submit();
+  });
 
-    if (email !== '') {
-      console.log('Email submitted:', email);
-
-      var notificationIcon = document.querySelector(`.notification-icon[data-washer="${washerNumber}"]`);
-      notificationIcon.classList.add('active');
-
-      var emailModal = bootstrap.Modal.getInstance(document.getElementById('emailModal'));
-      emailModal.hide();
-
-      emailInput.value = "";
-    } else {
-      alert('Please enter a valid email address.');
-    }
+  function resetBackground() {
+    document.body.style.backgroundColor = ''; // 배경색 원래대로 복구
   }
 
-  document.getElementById('emailForm').addEventListener('submit', handleSubmit);
+  var emailModal = document.getElementById('emailModal');
+  emailModal.addEventListener('hidden.bs.modal', function () {
+    resetBackground();
+  });
+  
 
   fetchDataAndUpdate();
 </script>
