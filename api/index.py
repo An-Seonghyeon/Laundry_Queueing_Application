@@ -32,12 +32,7 @@ def get_washer_info(dormitory, floor):
         return jsonify({'error': 'Dormitory not found'}), 404
     
     washer_config = washer_config_doc.to_dict()
-    total_floors = washer_config['total_floor']
     washers_per_floor = washer_config['washers_per_floor']
-    
-    # Check if the floor is valid
-    if floor_number < 1 or floor_number > total_floors:
-        return jsonify({'error': 'Invalid floor number'}), 400
     
     washer_info = []
 
