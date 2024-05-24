@@ -4,7 +4,8 @@ from firebase_admin import credentials, firestore
 import os
 import traceback
 from datetime import datetime, timedelta
-
+import threading
+import time
 ### Firebase Service Key ###
 cred_path = 'credentials/hd-laundry-qr-firebase-adminsdk-jk05n-e56796e24b.json'
 if not firebase_admin._apps:
@@ -295,6 +296,24 @@ def add_notification_email():
         print(f"Error in add_notification_email: {e}")
         traceback.print_exc()
         return jsonify({'status': 'error', 'message': str(e)}), 500
+    
+def check_and_delete_expired_documents():
+    while True:
+        now = datetime.now().timestamp()
+        waiting_docs = db.collection('waiting').get()
+        
+        for doc in waiting_docs:
+            left_time = doc.to_dict().get('left_time')
+            if left_time and left_time < now:
+                db.collection('waiting').document(doc.id).delete()
+                print(f"Document {doc.id} successfully deleted!")
+        
+        time.sleep(60)  # 5분마다 한 번씩 실행
+
+# 백그라운드 스레드에서 check_and_delete_expired_documents 함수 실행
+thread = threading.Thread(target=check_and_delete_expired_documents)
+thread.daemon = True
+thread.start()
 
 
 
