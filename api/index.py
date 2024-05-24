@@ -193,7 +193,10 @@ def submit_email():
 
         # Convert left_time to timestamp
         left_time_timestamp = left_time.timestamp()
-
+        existing = db.collection('waiting').where('washer_id', '==', washer_id).get()
+        if existing:
+            return render_template('wrong.html')
+        
         db.collection('waiting').add({
             'user_email': user_email,
             'washer_id': washer_id,
