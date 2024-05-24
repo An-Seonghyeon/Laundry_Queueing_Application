@@ -26,17 +26,24 @@ def get_washer_info(dormitory, floor):
     reservations_ref = db.collection('reservations')
     waiting_ref = db.collection('waiting')
 
-    # Query washers for the given dormitory and floor
-    washers_query = washers_ref.where('dormitory', '==', dormitory).where('floor', '==', floor_number)
-    washers = washers_query.stream()
-
+    # Fetch dormitory washer configuration
+    washer_config_doc = washers_ref.document(dormitory).get()
+    if not washer_config_doc.exists:
+        return jsonify({'error': 'Dormitory not found'}), 404
+    
+    washer_config = washer_config_doc.to_dict()
+    total_floors = washer_config['total_floor']
+    washers_per_floor = washer_config['washers_per_floor']
+    
+    # Check if the floor is valid
+    if floor_number < 1 or floor_number > total_floors:
+        return jsonify({'error': 'Invalid floor number'}), 400
+    
     washer_info = []
 
-    for washer in washers:
-        washer_data = washer.to_dict()
-        washer_id = washer_data['washer_id']
-        washer_number = washer_data['washer_number']
-
+    for washer_num in range(1, washers_per_floor + 1):
+        washer_id = f"{dormitory}_{floor_number}_{washer_num}"
+        
         # Query reservations for the washer
         reservation_query = reservations_ref.where('washer_id', '==', washer_id).stream()
         reservation_data = next(reservation_query, None)
@@ -48,7 +55,7 @@ def get_washer_info(dormitory, floor):
 
         washer_info.append({
             'washer_id': washer_id,
-            'number': washer_number,
+            'number': washer_num,
             'waitingPeople': waiting_people,
             'endTime': end_time
         })

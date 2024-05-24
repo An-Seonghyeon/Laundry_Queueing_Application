@@ -200,14 +200,14 @@
     {{ dormitory }}
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" onclick="setSecondDropdownItems(event)">
-    <li><a class="dropdown-item" href="#" data-id="하용조관">하용조관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b2">비전관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b3">벧엘관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b4">창조관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b5">로뎀관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b6">은혜관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b7">국제관</a></li>
-    <li><a class="dropdown-item" href="#" data-id="b8">갈대상자관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="hayongjo">하용조관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="vision">비전관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="bethel">벧엘관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="creation">창조관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="rothem">로뎀관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="grace">은혜관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="international">국제관</a></li>
+    <li><a class="dropdown-item" href="#" data-id="papyrus">갈대상자관</a></li>
   </ul>
 </div>
 
@@ -290,20 +290,20 @@
     document.getElementById('dropdownMenuButton2').innerText = '층 선택';
 
     switch (selectedBId) {
-      case '하용조관':
+      case 'hayongjo':
         addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']);
         break;
-      case 'b2':
-      case 'b4':
-      case 'b6':
-      case 'b8':
+      case 'vision':
+      case 'creation':
+      case 'grace':
+      case 'papyrus':
         addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5']);
         break;
-      case 'b7':
+      case 'international':
         addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4']);
         break;
-      case 'b3':
-      case 'b5':
+      case 'bethel':
+      case 'rothem':
         addItemsToDropdown(secondDropdownMenu, ['1', '2', '3', '4', '5', '6']);
         break;
     }
