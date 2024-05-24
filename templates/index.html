@@ -425,24 +425,46 @@
             }
 
             for (let i = 0; i < 6; i++) {
-                const washerNumber = (i + 1).toString();
-                const washerItem = document.createElement('div');
-                washerItem.className = 'time-item';
-                washerItem.setAttribute('data-washer', washerNumber);
+              const washerNumber = (i + 1).toString();
+              const washerItem = document.createElement('div');
+              washerItem.className = 'time-item';
+              washerItem.setAttribute('data-washer', washerNumber);
 
-                washerItem.innerHTML = `
-                    <div>${washerNumber}번 세탁기 - 대기 인원: 0명</div>
-                    <div class="time">00:00</div>
-                    <div class="icon"><span class="material-symbols-outlined notification-icon" data-washer="${washerNumber}" data-bs-toggle="modal" data-bs-target="#emailModal">notifications</span></div>
-                `;
+              let waitingInfo = "사용가능";
+              let notificationIconHTML = `<div class="icon"><span class="material-symbols-outlined notification-icon" data-washer="${washerNumber}" data-bs-toggle="modal" data-bs-target="#emailModal">notifications</span></div>`;
+              
+              if (waitingData[washerNumber]) {
+                  const leftTime = waitingData[washerNumber].left_time;
+                  const leftTimeDate = new Date(leftTime * 1000); // Convert timestamp to Date
+                  const currentTime = Date.now() / 1000; // 현재 시간을 초 단위로
+                  const remainingTime = leftTime - currentTime; // 남은 시간 계산
 
-                const notificationIcon = washerItem.querySelector('.notification-icon');
-                notificationIcon.addEventListener('click', function() {
-                    showPopup(washerNumber);
-                });
+                  if (remainingTime > 0) {
+                      const remainingHours = Math.floor(remainingTime / 3600).toString().padStart(2, '0');
+                      const remainingMinutes = Math.floor((remainingTime % 3600) / 60).toString().padStart(2, '0');
+                      waitingInfo = `${remainingHours}:${remainingMinutes}`;
+                  }
+              }
 
-                container.appendChild(washerItem);
-            }
+              if (waitingInfo === "사용가능") {
+                  notificationIconHTML = ''; // Hide notification icon if washer is available
+              }
+
+              washerItem.innerHTML = `
+                  <div>${washerNumber}번 세탁기 - 대기 인원: 0명</div>
+                  <div class="time">${waitingInfo}</div>
+                  <div class="icon">${notificationIconHTML}</div>
+              `;
+
+              const notificationIcon = washerItem.querySelector('.notification-icon');
+              if (notificationIcon) {
+                  notificationIcon.addEventListener('click', function() {
+                      showPopup(washerNumber);
+                  });
+              }
+
+              container.appendChild(washerItem);
+          }
 
             // 초기화 후 1초마다 남은 시간을 업데이트합니다.
             updateTimes();
