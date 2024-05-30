@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import threading
 import time
 ### Firebase Service Key ###
-cred_path = 'credentials/hd-laundry-qr-firebase-adminsdk-jk05n-e56796e24b.json'
+cred_path = ''
 if not firebase_admin._apps:
     cred = credentials.Certificate(cred_path)
     firebase_admin.initialize_app(cred)
